@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a13fe1bc0907e469d2e616c3b3ba44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
+  moveDir: {x: 0, y: 0}
 --- !u!114 &8579943632357490608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,3 +313,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c878cd6f8cfd44187c592c016b8fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 4
+  jumpForce: 5
+  jumpCount: 2

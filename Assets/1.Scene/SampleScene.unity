@@ -12644,10 +12644,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Test_Skul
       objectReference: {fileID: 0}
-    - target: {fileID: 6152649955731430111, guid: c343708f59791bd4dbc4b59605b568a1, type: 3}
-      propertyPath: moveSpeed
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12660,9 +12656,9 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 412953985}
   - {fileID: 965772633}
+  - {fileID: 1829152878}
   - {fileID: 1527782266448904965}
   - {fileID: 348949718}
-  - {fileID: 1829152878}
   - {fileID: 491729847}
   - {fileID: 1430531384}
   - {fileID: 768609601}

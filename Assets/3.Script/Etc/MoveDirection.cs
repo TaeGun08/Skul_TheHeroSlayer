@@ -17,7 +17,6 @@ public class MoveDirection : MonoBehaviour
 
     private void FixedUpdate()
     {
-        moveDir = rigid.velocity;
-        rigid.velocity = new Vector2(moveDir.x * Time.deltaTime, moveDir.y);
+        rigid.velocity = new Vector2(moveDir.x, rigid.velocity.y);
     }
 }
