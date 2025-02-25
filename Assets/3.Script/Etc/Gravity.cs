@@ -6,36 +6,24 @@ public class Gravity : MonoBehaviour
 {
     private Rigidbody2D rigid;
     private BoxCollider2D boxColl;
-    private State state;
 
     [Header("ม฿ทย")]
     [SerializeField] private float gravity;
     private float velocity;
+    public float Velocity { get { return velocity; } set { velocity = value; } }
 
     [SerializeField] private bool isGround;
     public bool IsGround => isGround;
-    
 
     private void Awake()
     {
         TryGetComponent(out rigid);
         TryGetComponent(out boxColl);
-        TryGetComponent(out state);
     }
 
     private void FixedUpdate()
     {
-        if (!state.StateEnum.Equals(StateEnum.Jump))
-        {
-            gravityVelocity();
-        }
-        else
-        {
-            if (rigid.velocity.y <= 0)
-            {
-                state.StateEnum = StateEnum.Fall;
-            }
-        }
+        gravityVelocity();
 
         rigid.velocity = new Vector2(rigid.velocity.x, velocity);
     }
@@ -44,7 +32,7 @@ public class Gravity : MonoBehaviour
     {
         if (!groundCheck())
         {
-            velocity -= gravity * Time.deltaTime;
+            velocity -= gravity * Time.deltaTime * 2f;
         }
         else
         {
@@ -56,12 +44,12 @@ public class Gravity : MonoBehaviour
     {
         isGround = false;
 
-        if (Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0.0f, Vector2.down, 0.1f, LayerMask.GetMask("Ground")))
+        if (rigid.velocity.y > 0)
         {
-            isGround = true;
+            return false;
         }
 
-        if (Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0.0f, Vector2.down, 0.1f, LayerMask.GetMask("Footboard")))
+        if (Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0.0f, Vector2.down, 0.1f, LayerMask.GetMask("Ground"))) 
         {
             isGround = true;
         }

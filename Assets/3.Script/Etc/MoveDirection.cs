@@ -17,6 +17,6 @@ public class MoveDirection : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigid.velocity = new Vector2(moveDir.x, rigid.velocity.y);
+        rigid.MovePosition(rigid.position + new Vector2(moveDir.x, rigid.velocity.y) * Time.deltaTime);
     }
 }

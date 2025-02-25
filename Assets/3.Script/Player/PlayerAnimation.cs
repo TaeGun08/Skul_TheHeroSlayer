@@ -22,21 +22,29 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetFloat("StateIndex", state.StateEnum == StateEnum.Walk ? 1 : 0);
     }
 
-    public IEnumerator jumpAnim()
+    private IEnumerator fallAnim()
     {
-        while (state.StateEnum.Equals(StateEnum.Jump))
+        while (true)
         {
-
+            if (fallTime >= 1f)
+            {
+                fallTime = 0;
+                break;
+            }
+            fallTime += Time.deltaTime * 2f;
+            anim.SetFloat("JumpFall", fallTime);
             yield return null;
         }
     }
 
-    private void fallAnim()
+    public void FallAnim()
     {
-
+        fallTime = 0;
+        StopCoroutine("fallAnim");
+        StartCoroutine("fallAnim");
     }
 
-    public void groundAnim()
+    public void jumpAnim()
     {
         anim.SetBool("isGround", gravity.IsGround);
     }
@@ -44,6 +52,6 @@ public class PlayerAnimation : MonoBehaviour
     public void PlayerAnim()
     {
         moveAnim();
-        groundAnim();
+        jumpAnim();
     }
 }

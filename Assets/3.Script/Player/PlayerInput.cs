@@ -8,9 +8,11 @@ public class PlayerInput : MonoBehaviour
     private MoveDirection moveDirection;
     private State state;
     private Gravity gravity;
+    private PlayerAnimation playerAnim;
 
     private Rigidbody2D rigid;
-    private int curJumpCount;
+    private int jumpCount;
+    private float jumpTimer;
 
     private void Awake()
     {
@@ -18,6 +20,7 @@ public class PlayerInput : MonoBehaviour
         TryGetComponent(out moveDirection);
         TryGetComponent(out rigid);
         TryGetComponent(out gravity);
+        TryGetComponent(out playerAnim);
     }
 
     private void Start()
@@ -30,13 +33,19 @@ public class PlayerInput : MonoBehaviour
         Vector2 moveDir = moveDirection.MoveDir;
         Vector2 scale = transform.localScale;
 
-        state.StateEnum = StateEnum.Idle;
+        if (rigid.velocity.y <= 0 && gravity.IsGround)
+        {
+            state.StateEnum = StateEnum.Idle;
+        }
         moveDir.x = 0;
 
         if (Input.GetKey(keyManager.Key.KeyCodes[2])
         && Input.GetKey(keyManager.Key.KeyCodes[3]))
         {
-            state.StateEnum = StateEnum.Idle;
+            if (rigid.velocity.y <= 0 && gravity.IsGround)
+            {
+                state.StateEnum = StateEnum.Idle;
+            }
             moveDir.x = 0;
             moveDirection.MoveDir = moveDir;
             return;
@@ -45,7 +54,10 @@ public class PlayerInput : MonoBehaviour
         //¿ÞÂÊ
         if (Input.GetKey(keyManager.Key.KeyCodes[2]))
         {
-            state.StateEnum = StateEnum.Walk;
+            if (rigid.velocity.y <= 0 && gravity.IsGround)
+            {
+                state.StateEnum = StateEnum.Walk;
+            }
             moveDir.x = -_moveSpeed;
 
             if (scale.x > 0)
@@ -58,7 +70,10 @@ public class PlayerInput : MonoBehaviour
         //¿À¸¥ÂÊ
         if (Input.GetKey(keyManager.Key.KeyCodes[3]))
         {
-            state.StateEnum = StateEnum.Walk;
+            if (rigid.velocity.y <= 0 && gravity.IsGround)
+            {
+                state.StateEnum = StateEnum.Walk;
+            }
             moveDir.x = _moveSpeed;
 
             if (scale.x < 0)
@@ -71,18 +86,32 @@ public class PlayerInput : MonoBehaviour
         moveDirection.MoveDir = moveDir;
     }
 
-    public void InputJump(float _jumpForce, int _jumpCount)
+    public void InputJump(float _jumpForce, int _maxJumpCount)
     {
-        if (gravity.IsGround)
+        if (rigid.velocity.y <= 0 && gravity.IsGround)
         {
-            curJumpCount = 0;
+            jumpCount = 0;
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) && _jumpCount > curJumpCount)
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) && _maxJumpCount > jumpCount)
         {
             state.StateEnum = StateEnum.Jump;
-            rigid.AddForce(new Vector2(rigid.velocity.x, _jumpForce), ForceMode2D.Impulse);
-            curJumpCount++;
+            gravity.Velocity = 0f;
+            gravity.enabled = false;
+            rigid.velocity = new Vector2(rigid.velocity.y, _jumpForce);
+            jumpCount++;
+            playerAnim.FallAnim();
+            jumpTimer = 0f;
+        }
+
+        if (state.StateEnum.Equals(StateEnum.Jump))
+        {
+            jumpTimer += Time.deltaTime;
+            if (jumpTimer >= 0.2f)
+            {
+                gravity.enabled = true;
+                state.StateEnum = StateEnum.Fall;
+            }
         }
     }
 
