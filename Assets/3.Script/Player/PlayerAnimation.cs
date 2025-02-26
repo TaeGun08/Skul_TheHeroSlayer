@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    private Rigidbody2D rigid;
     private State state;
     private Animator anim;
     private Gravity gravity;
 
     private float fallTime;
+    public float FallTime { set { fallTime = value; } }
+
+    private bool isJump;
+    public bool IsJump { get { return isJump; } set { isJump = value; } }
 
     private void Awake()
     {
+        TryGetComponent(out rigid);
         TryGetComponent(out state);
         TryGetComponent(out anim);
         TryGetComponent(out gravity);
@@ -22,36 +28,35 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetFloat("StateIndex", state.StateEnum == StateEnum.Walk ? 1 : 0);
     }
 
-    private IEnumerator fallAnim()
+    private void fallAnim()
     {
-        while (true)
+        if (rigid.velocity.y <= 0 && !gravity.IsGround)
         {
+            fallTime += Time.deltaTime * 2f;
             if (fallTime >= 1f)
             {
-                fallTime = 0;
-                break;
+                fallTime = 1f;
             }
-            fallTime += Time.deltaTime * 2f;
-            anim.SetFloat("JumpFall", fallTime);
-            yield return null;
         }
+
+        if (gravity.IsGround)
+        {
+            fallTime = 0;
+        }
+
+        anim.SetFloat("JumpFall", fallTime);
     }
 
-    public void FallAnim()
-    {
-        fallTime = 0;
-        StopCoroutine("fallAnim");
-        StartCoroutine("fallAnim");
-    }
-
-    public void jumpAnim()
+    private void jumpAnim()
     {
         anim.SetBool("isGround", gravity.IsGround);
+        anim.SetBool("isJump", isJump);
     }
 
     public void PlayerAnim()
     {
         moveAnim();
+        fallAnim();
         jumpAnim();
     }
 }

@@ -24,19 +24,24 @@ public class Gravity : MonoBehaviour
     private void FixedUpdate()
     {
         gravityVelocity();
-
-        rigid.velocity = new Vector2(rigid.velocity.x, velocity);
     }
 
     private void gravityVelocity()
     {
         if (!groundCheck())
         {
-            velocity -= gravity * Time.deltaTime * 2f;
+            velocity = gravity * Time.deltaTime;
+
+            rigid.velocity -= new Vector2(0f, velocity);
+
+            if (rigid.velocity.y <= -gravity)
+            {
+                rigid.velocity = new Vector2(rigid.velocity.x, -gravity);
+            }
         }
         else
         {
-            velocity = 0;
+            rigid.velocity = new Vector2(rigid.velocity.x, 0f);
         }
     }
 
@@ -44,9 +49,9 @@ public class Gravity : MonoBehaviour
     {
         isGround = false;
 
-        if (rigid.velocity.y > 0)
+        if (rigid.velocity.y > 0f)
         {
-            return false;
+            isGround = false;
         }
 
         if (Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0.0f, Vector2.down, 0.1f, LayerMask.GetMask("Ground"))) 

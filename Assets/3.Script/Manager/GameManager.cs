@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    [SerializeField] private GameObject skul;
 
     private bool isGameOver;
 
@@ -19,5 +21,12 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        Instantiate(skul);
+    }
+
+    private void Start()
+    {
+
     }
 }

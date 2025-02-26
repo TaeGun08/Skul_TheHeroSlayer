@@ -7,10 +7,17 @@ public class PlayerController : MonoBehaviour
     private PlayerInput input;
     private PlayerAnimation anim;
 
-    [Header("플레이어")]
+    [Header("Skul")]
+    [SerializeField] private int skulIndex;
+    [Space]
     [SerializeField] private float speed;
+    [Space]
     [SerializeField] private float jumpForce;
     [SerializeField] private int jumpCount;
+    [Space]
+    [SerializeField] private float dashForce;
+    [SerializeField] private float dashCoolTime;
+    [SerializeField] private int dashCount;
 
     private void Start()
     {
@@ -22,7 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         input.InputMoveLeftOrRight(speed);
         input.InputJump(jumpForce, jumpCount);
-        input.InputDash();
+        input.InputDash(dashForce, dashCoolTime, dashCount);
         anim.PlayerAnim();
     }
 }
