@@ -6,11 +6,7 @@ public enum StateEnum
 {
     Idle,
     Walk,
-    Jump,
-    Fall,
-    Dash,
     Attack,
-    Death,
 }
 
 public class State : MonoBehaviour

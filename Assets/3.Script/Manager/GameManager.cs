@@ -6,7 +6,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    [SerializeField] private GameObject skul;
+    [SerializeField] private SkulData skul;
+    private GameObject onSkul;
+    public GameObject OnSkul { get { return onSkul; } set { onSkul = value; } }
 
     private bool isGameOver;
 
@@ -22,11 +24,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        Application.targetFrameRate = 60;
+
         Instantiate(skul);
-    }
-
-    private void Start()
-    {
-
     }
 }

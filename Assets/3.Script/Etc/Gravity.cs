@@ -30,7 +30,7 @@ public class Gravity : MonoBehaviour
     {
         if (!groundCheck())
         {
-            velocity = gravity * Time.deltaTime;
+            velocity = gravity * Time.deltaTime * 3f;
 
             rigid.velocity -= new Vector2(0f, velocity);
 
@@ -38,10 +38,6 @@ public class Gravity : MonoBehaviour
             {
                 rigid.velocity = new Vector2(rigid.velocity.x, -gravity);
             }
-        }
-        else
-        {
-            rigid.velocity = new Vector2(rigid.velocity.x, 0f);
         }
     }
 
@@ -54,7 +50,9 @@ public class Gravity : MonoBehaviour
             isGround = false;
         }
 
-        if (Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0.0f, Vector2.down, 0.1f, LayerMask.GetMask("Ground"))) 
+        if (Physics2D.BoxCast(new Vector2(boxColl.bounds.center.x, boxColl.bounds.min.y), 
+            new Vector2(boxColl.bounds.size.x, boxColl.bounds.size.y * 0.1f), 0.0f, Vector2.down, 0.1f, 
+            LayerMask.GetMask("Ground"))) 
         {
             isGround = true;
         }
