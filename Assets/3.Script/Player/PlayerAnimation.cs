@@ -8,7 +8,6 @@ public class PlayerAnimation : MonoBehaviour
     private State state;
     private Animator anim;
     private Gravity gravity;
-    private PlayerAttack playerAttack;
 
     private float fallTime;
     public float FallTime { set { fallTime = value; } }
@@ -25,7 +24,6 @@ public class PlayerAnimation : MonoBehaviour
         TryGetComponent(out state);
         TryGetComponent(out anim);
         TryGetComponent(out gravity);
-        TryGetComponent(out playerAttack);
     }
 
     private void moveAnim()
@@ -63,22 +61,11 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetBool("isDash", isDash);
     }
 
-    private void attackAnim()
-    {
-        anim.SetBool("isAttack", playerAttack.IsAttack);
-    }
-
-    public void AttackAnim(int _playerAnimNumber)
-    {
-        anim.SetFloat("AttackCount", _playerAnimNumber);
-    }
-
     public void PlayerAnim()
     {
         moveAnim();
         fallAnim();
         jumpAnim();
         dashAnim();
-        attackAnim();
     }
 }

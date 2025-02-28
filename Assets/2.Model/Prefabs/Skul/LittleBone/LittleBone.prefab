@@ -19,8 +19,8 @@ GameObject:
   - component: {fileID: 4501423736626071562}
   - component: {fileID: 5396138880277682879}
   - component: {fileID: 6979311995567482542}
-  - component: {fileID: 7774196378207260470}
   - component: {fileID: 7250986162953236767}
+  - component: {fileID: 7774196378207260470}
   m_Layer: 3
   m_Name: LittleBone
   m_TagString: Untagged
@@ -303,6 +303,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6073245efb7214a49b2129f2f0c44ae3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7250986162953236767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1734914054686876365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598bf780adf053b4ea6cc7cb0bc40323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxAttackCount: 2
+  attackResetTime: 0.5
+  littleBone_Head: {fileID: 4847373583819177060, guid: d1bbca8a148df544a9da13668ae4fdaa, type: 3}
+  boxColl: {fileID: 8084461689734032877}
 --- !u!114 &7774196378207260470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,25 +333,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skulIndex: 0
   speed: 4
-  jumpForce: 6.5
+  jumpForce: 7
   jumpCount: 2
   dashForce: 16
   dashCoolTime: 1
   dashCount: 2
   gravityDash: 0
---- !u!114 &7250986162953236767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1734914054686876365}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 598bf780adf053b4ea6cc7cb0bc40323, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boxColl: {fileID: 8084461689734032877}
+  formChange: 0
 --- !u!1 &4964248280706548369
 GameObject:
   m_ObjectHideFlags: 0

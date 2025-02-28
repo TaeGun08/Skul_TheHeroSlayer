@@ -39,6 +39,13 @@ public class Gravity : MonoBehaviour
                 rigid.velocity = new Vector2(rigid.velocity.x, -gravity);
             }
         }
+        else
+        {
+            if (rigid.velocity.y != 0f)
+            {
+                rigid.velocity = new Vector2(rigid.velocity.x, 0f);
+            }
+        }
     }
 
     private bool groundCheck()

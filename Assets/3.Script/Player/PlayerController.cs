@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashCoolTime;
     [SerializeField] private int dashCount;
     [SerializeField] private bool gravityDash;
+    [Space]
+    [SerializeField] private int formChange;
 
     private void Start()
     {
@@ -32,7 +34,7 @@ public class PlayerController : MonoBehaviour
         input.InputMoveLeftOrRight(speed);
         input.InputJump(jumpForce, jumpCount);
         input.InputDash(dashForce, dashCoolTime, dashCount, gravityDash);
-        input.InputAttack();
+        input.InputAttack(ref formChange);
         anim.PlayerAnim();
     }
 }

@@ -81,7 +81,6 @@ public class PlayerInput : MonoBehaviour
 
     private void attack()
     {
-        playerAttack.IsAttack = true;
         state.StateEnum = StateEnum.Attack;
         moveDirection.enabled = true;
         gravity.enabled = true;
@@ -96,7 +95,7 @@ public class PlayerInput : MonoBehaviour
 
     public void InputMoveLeftOrRight(float _moveSpeed)
     {
-        if (isDashing && dashCoolTimer <= 0.22f)
+        if (isDashing && dashCoolTimer <= 0.22f || playerAttack.IsAttack || playerAttack.IsSkillAttack)
         {
             return;
         }
@@ -164,7 +163,9 @@ public class PlayerInput : MonoBehaviour
             jumpCount = 0;
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) && _maxJumpCount > jumpCount)
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) 
+            && _maxJumpCount > jumpCount
+            && !playerAttack.IsJumpAttack)
         {
             if (rigid.velocity.y <= 0 && !gravity.IsGround)
             {
@@ -173,6 +174,7 @@ public class PlayerInput : MonoBehaviour
 
             isJumping = true;
             gravity.enabled = false;
+            playerAttack.IsAttack = false;
             anim.IsJump = true;
             anim.FallTime = 0f;
             gravity.Velocity = 0f;
@@ -212,6 +214,7 @@ public class PlayerInput : MonoBehaviour
             && dashCount < _maxDashCount
                 && dashCoolTimer < 0.3f)
         {
+            playerAttack.EndAttack();
             playerAttack.IsAttack = false;
             gravity.Velocity = 0f;
             anim.FallTime = 0f;
@@ -251,29 +254,44 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void InputAttack()
+    public void InputAttack(ref int _formChange)
     {
+        playerAttack.ResetAttack(_formChange);
+
         if (isJumping)
         {
             return;
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[6]) && !playerAttack.IsAttack)
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[6]))
         {
-            anim.AttackAnim(playerAttack.AttackCount);
             attack();
+
+            if (rigid.velocity.y <= 0 && !gravity.IsGround)
+            {
+                playerAttack.IsJumpAttack = true;
+            }
+
+            if (gravity.IsGround)
+            {
+                rigid.velocity = Vector2.zero;
+                moveDirection.MoveDir = Vector2.zero;
+                moveDirection.enabled = false;
+            }
+
+            playerAttack.Attack(_formChange);
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[9]) && !playerAttack.IsAttack)
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[9]))
         {
-            playerAttack.SkillNumber = 0;
             attack();
+            playerAttack.SkillAttack(0);
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[10]) && !playerAttack.IsAttack)
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[10]))
         {
-            playerAttack.SkillNumber = 1;
             attack();
+            playerAttack.SkillAttack(1);
         }
     }
 }
