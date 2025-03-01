@@ -6,6 +6,7 @@ public class MoveRotate : MonoBehaviour
 {
     [Header("È¸Àü")]
     [SerializeField] private float speed;
+    public float Speed { set { speed = value; } }
 
     private void FixedUpdate()
     {

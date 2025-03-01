@@ -12,12 +12,6 @@ public class PlayerAnimation : MonoBehaviour
     private float fallTime;
     public float FallTime { set { fallTime = value; } }
 
-    private bool isJump;
-    public bool IsJump { get { return isJump; } set { isJump = value; } }
-
-    private bool isDash;
-    public bool IsDash { get { return isDash; } set { isDash = value; } }
-
     private void Awake()
     {
         TryGetComponent(out rigid);
@@ -33,9 +27,10 @@ public class PlayerAnimation : MonoBehaviour
 
     private void fallAnim()
     {
-        if (rigid.velocity.y <= 0 && !gravity.IsGround)
+        if (rigid.velocity.y < 0 && !gravity.IsGround)
         {
             fallTime += Time.deltaTime * 2f;
+            state.SetSateEnum(StateEnum.Fall, gravity.IsGround);
             if (fallTime >= 1f)
             {
                 fallTime = 1f;
@@ -53,12 +48,12 @@ public class PlayerAnimation : MonoBehaviour
     private void jumpAnim()
     {
         anim.SetBool("isGround", gravity.IsGround);
-        anim.SetBool("isJump", isJump);
+        anim.SetBool("isJump", state.StateEnum == StateEnum.Jump ? true : false);
     }
 
     private void dashAnim()
     {
-        anim.SetBool("isDash", isDash);
+        anim.SetBool("isDash", state.StateEnum == StateEnum.Dash ? true : false);
     }
 
     public void PlayerAnim()

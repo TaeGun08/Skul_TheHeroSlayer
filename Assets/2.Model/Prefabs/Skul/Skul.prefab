@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5560741185950068035}
   - component: {fileID: 7105371592668741716}
   - component: {fileID: 2219227369249550313}
+  - component: {fileID: -1973577508225589401}
+  - component: {fileID: 3238291469613638945}
   m_Layer: 0
   m_Name: Skul
   m_TagString: Untagged
@@ -54,7 +56,6 @@ MonoBehaviour:
   skulB:
     SkulIndex: -1
     Rank: 0
-  dashPrefab: {fileID: 0}
 --- !u!114 &2219227369249550313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,3 +69,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dashPrefab: {fileID: 4974461952308378308, guid: 71d584aa6a3d5e247b9b1e9b2b88e1fc, type: 3}
+--- !u!114 &-1973577508225589401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605193991068810105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36935724bff4f0d46a9d70fd1eb30bfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3238291469613638945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605193991068810105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2e1f423d176814381dbe261bd86a3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  receivedDamage: 78.2

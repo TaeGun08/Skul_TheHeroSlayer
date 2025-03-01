@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +5,31 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
+    private Dictionary<string, object> managersDictionary = new Dictionary<string, object>();
+    public Dictionary<string, object> ManagersDictionary { get { return managersDictionary; } set { managersDictionary = value; } }
+
+    [Header("½ºÄÃ")]
     [SerializeField] private SkulData skul;
-    private GameObject onSkul;
+    public SkulData Skul => skul;
+    [SerializeField] private SkulData skulData;
+    public SkulData SkulData { get { return skulData; } set { skulData = value; } }
+    [SerializeField] private GameObject onSkul;
     public GameObject OnSkul { get { return onSkul; } set { onSkul = value; } }
 
+    [Header("Äµ¹ö½º")]
+    [SerializeField] private GameObject canvas;
+
+    private bool isGamePause;
+    public bool IsGamePause
+    {
+        get { return isGamePause; }
+        set
+        {
+            isGamePause = value;
+            Time.timeScale = isGamePause == true ? 0 : 1;
+        }
+    }
     private bool isGameOver;
 
     private void Awake()
@@ -26,6 +46,11 @@ public class GameManager : MonoBehaviour
 
         Application.targetFrameRate = 60;
 
-        Instantiate(skul);
+        Instantiate(canvas, transform);
+    }
+
+    public void NewGame()
+    {
+        Destroy(skulData.gameObject);
     }
 }

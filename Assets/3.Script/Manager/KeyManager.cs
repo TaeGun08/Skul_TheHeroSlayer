@@ -5,66 +5,51 @@ using UnityEngine;
 
 public class Key
 {
-    public KeyCode[] KeyCodes;
-
-    public Key(int _keySize)
-    {
-        KeyCodes = new KeyCode[_keySize];
-    }
+    public KeyCode[] KeyCodes = new KeyCode[13];
 }
 
 public class KeyManager : MonoBehaviour
 {
-    private Dictionary<int, KeyCode> keyDictionary = new Dictionary<int, KeyCode>();
-    private Key key;
+    private Dictionary<string, Key> keyDictionary = new Dictionary<string, Key>();
+    private Key key = new Key();
     public Key Key => key;
 
     private void Awake()
     {
-        if (!string.IsNullOrEmpty(PlayerPrefs.GetString("SaveKey")))
+        if (!string.IsNullOrEmpty(PlayerPrefs.GetString("SaveKeyCode")))
         {
-            keyDictionary = JsonConvert.DeserializeObject<Dictionary<int, KeyCode>>(PlayerPrefs.GetString("SaveKey"));
+            keyDictionary = JsonConvert.DeserializeObject<Dictionary<string, Key>>(PlayerPrefs.GetString("SaveKeyCode"));
 
-            key = new Key(keyDictionary.Count);
-
-            for (int i = 0; i < keyDictionary.Count; i++)
-            {
-                key.KeyCodes[i] = keyDictionary[i];
-            }
+            key = keyDictionary["KeyCode"];
         }
         else
         {
-            EarlyKey();
+            key.KeyCodes[0] = KeyCode.UpArrow;
+            key.KeyCodes[1] = KeyCode.DownArrow;
+            key.KeyCodes[2] = KeyCode.LeftArrow;
+            key.KeyCodes[3] = KeyCode.RightArrow;
+            key.KeyCodes[4] = KeyCode.Tab;
+            key.KeyCodes[5] = KeyCode.F;
+            key.KeyCodes[6] = KeyCode.D;
+            key.KeyCodes[7] = KeyCode.A;
+            key.KeyCodes[8] = KeyCode.S;
+            key.KeyCodes[9] = KeyCode.Q;
+            key.KeyCodes[10] = KeyCode.W;
+            key.KeyCodes[11] = KeyCode.E;
+            key.KeyCodes[12] = KeyCode.Space;
 
-            key = new Key(keyDictionary.Count);
+            keyDictionary.Add("KeyCode", key);
 
-            for (int i = 0; i < keyDictionary.Count; i++)
-            {
-                key.KeyCodes[i] = keyDictionary[i];
-            }
-
-            PlayerPrefs.SetString("SaveKey", JsonConvert.SerializeObject(keyDictionary));
+            PlayerPrefs.SetString("SaveKeyCode", JsonConvert.SerializeObject(keyDictionary));
         }
     }
 
-    /// <summary>
-    /// 초기 설정 키
-    /// </summary>
-    private void EarlyKey()
+    private void OnEnable()
     {
-        keyDictionary.Add(0, KeyCode.UpArrow);
-        keyDictionary.Add(1, KeyCode.DownArrow);
-        keyDictionary.Add(2, KeyCode.LeftArrow);
-        keyDictionary.Add(3, KeyCode.RightArrow);
-        keyDictionary.Add(4, KeyCode.Tab);
-        keyDictionary.Add(5, KeyCode.F);
-        keyDictionary.Add(6, KeyCode.D);
-        keyDictionary.Add(7, KeyCode.A);
-        keyDictionary.Add(8, KeyCode.S);
-        keyDictionary.Add(9, KeyCode.Q);
-        keyDictionary.Add(10, KeyCode.W);
-        keyDictionary.Add(11, KeyCode.E);
-        keyDictionary.Add(12, KeyCode.Space);
+        if (!GameManager.Instance.ManagersDictionary.ContainsKey("KeyManager"))
+        {
+            GameManager.Instance.ManagersDictionary.Add("KeyManager", this);
+        }
     }
 
     /// <summary>
@@ -72,19 +57,21 @@ public class KeyManager : MonoBehaviour
     /// </summary>
     public void ResetKey()
     {
-        keyDictionary[0] = KeyCode.UpArrow;
-        keyDictionary[1] = KeyCode.DownArrow;
-        keyDictionary[2] = KeyCode.LeftArrow;
-        keyDictionary[3] = KeyCode.RightArrow;
-        keyDictionary[4] = KeyCode.Tab;
-        keyDictionary[5] = KeyCode.F;
-        keyDictionary[6] = KeyCode.D;
-        keyDictionary[7] = KeyCode.A;
-        keyDictionary[8] = KeyCode.S;
-        keyDictionary[9] = KeyCode.Q;
-        keyDictionary[10] = KeyCode.W;
-        keyDictionary[11] = KeyCode.E;
-        keyDictionary[12] = KeyCode.Space;
+        key.KeyCodes[0] = KeyCode.UpArrow;
+        key.KeyCodes[1] = KeyCode.DownArrow;
+        key.KeyCodes[2] = KeyCode.LeftArrow;
+        key.KeyCodes[3] = KeyCode.RightArrow;
+        key.KeyCodes[4] = KeyCode.Tab;
+        key.KeyCodes[5] = KeyCode.F;
+        key.KeyCodes[6] = KeyCode.D;
+        key.KeyCodes[7] = KeyCode.A;
+        key.KeyCodes[8] = KeyCode.S;
+        key.KeyCodes[9] = KeyCode.Q;
+        key.KeyCodes[10] = KeyCode.W;
+        key.KeyCodes[11] = KeyCode.E;
+        key.KeyCodes[12] = KeyCode.Space;
+
+        PlayerPrefs.SetString("SaveKeyCode", JsonConvert.SerializeObject(keyDictionary));
     } 
 
     /// <summary>
@@ -92,19 +79,21 @@ public class KeyManager : MonoBehaviour
     /// </summary>
     public void SetKey(KeyCode keyCode, int _keyIndex)
     {
-        KeyCode tempKey = keyDictionary[_keyIndex];
-        keyDictionary[_keyIndex] = keyCode;
+        KeyCode tempKey = key.KeyCodes[_keyIndex];
+        key.KeyCodes[_keyIndex] = keyCode;
 
-        for (int i = 0; i < keyDictionary.Count; i++)
+        for (int i = 0; i < key.KeyCodes.Length; i++)
         {
             if (!_keyIndex.Equals(i))
             {
-                if (keyDictionary[_keyIndex] == keyDictionary[i])
+                if (key.KeyCodes[_keyIndex] == key.KeyCodes[i])
                 {
-                    keyDictionary[i] = tempKey;
-                    return;
+                    key.KeyCodes[i] = tempKey;
+                    break;
                 }
             }
         }
+
+        PlayerPrefs.SetString("SaveKeyCode", JsonConvert.SerializeObject(keyDictionary));
     }
 }

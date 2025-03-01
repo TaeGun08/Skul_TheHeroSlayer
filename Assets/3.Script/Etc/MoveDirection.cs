@@ -9,6 +9,8 @@ public class MoveDirection : MonoBehaviour
     [Header("¿Ãµø")]
     [SerializeField] private Vector2 moveDir;
     public Vector2 MoveDir { get { return moveDir; } set { moveDir = value; } }
+    [SerializeField] private bool moveOff;
+    public bool MoveOff { get { return moveOff; } set { moveOff = value; } }
 
     private void Awake()
     {
@@ -17,6 +19,9 @@ public class MoveDirection : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rigid.velocity = new Vector2(moveDir.x, rigid.velocity.y);
+        if (!moveOff)
+        {
+            rigid.velocity = new Vector2(moveDir.x, rigid.velocity.y);
+        }
     }
 }

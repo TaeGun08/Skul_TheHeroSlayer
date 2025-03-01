@@ -18,9 +18,9 @@ public class CameraMovement : MonoBehaviour
         gameManager = GameManager.Instance;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (virtualCamera.Follow == null)
+        if (virtualCamera.Follow == null && gameManager.OnSkul != null)
         {
             virtualCamera.Follow = gameManager.OnSkul.transform;
         }

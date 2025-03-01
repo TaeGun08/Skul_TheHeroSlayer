@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveDir: {x: 0, y: 0}
+  moveOff: 0
 --- !u!114 &8579943632357490608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,9 +317,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAttackCount: 2
-  attackResetTime: 0.5
+  skillACollTime: 8
+  skillBCollTime: 3
   littleBone_Head: {fileID: 4847373583819177060, guid: d1bbca8a148df544a9da13668ae4fdaa, type: 3}
-  boxColl: {fileID: 8084461689734032877}
+  hitBox: {fileID: 0}
 --- !u!114 &7774196378207260470
 MonoBehaviour:
   m_ObjectHideFlags: 0

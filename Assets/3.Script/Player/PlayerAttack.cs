@@ -4,16 +4,25 @@ using UnityEngine;
 
 public abstract class PlayerAttack : MonoBehaviour
 {
-    protected Animator anim;
     protected KeyManager keyManager;
+
+    protected Animator anim;
     protected MoveDirection moveDir;
     protected Rigidbody2D rigid;
     protected Gravity gravity;
+    protected State state;
 
     [Header("공격설정")]
     [SerializeField] protected int maxAttackCount;
-    [SerializeField] protected float attackResetTime;
-    protected float attackTimer;
+    [SerializeField] protected float skillACollTime;
+    public float SkillACollTime { get { return skillACollTime; } set { skillACollTime = value; } }
+    [SerializeField] protected float skillBCollTime;
+    public float SkillBCollTime { get { return skillBCollTime; } set { skillBCollTime = value; } }
+
+    protected float skillACollTimer;
+    public float SkillACollTimer { get { return skillACollTimer; } set { skillACollTimer = value; } }
+    protected float skillBCollTimer;
+    public float SkillBCollTimer { get { return skillBCollTimer; } set { skillBCollTimer = value; } }
 
     protected int attackCount;
     public int AttackCount { get { return attackCount; } set { attackCount = value; } }
@@ -35,11 +44,15 @@ public abstract class PlayerAttack : MonoBehaviour
         TryGetComponent(out moveDir);
         TryGetComponent(out rigid);
         TryGetComponent(out gravity);
+        TryGetComponent(out state);
     }
 
     protected virtual void Start()
     {
-        FindAnyObjectByType<KeyManager>().TryGetComponent(out keyManager);
+        if (GameManager.Instance.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
+        {
+            keyManager = _keyManager as KeyManager;
+        }
     }
 
     protected abstract IEnumerator AttackMoveCoroutine();
@@ -47,6 +60,8 @@ public abstract class PlayerAttack : MonoBehaviour
     public abstract void ResetAttack(int _info);
 
     public abstract void Attack(int _info);
+
+    public abstract void ResetSkillAttack();
 
     public abstract void SkillAttack(int _skillNumber);
 

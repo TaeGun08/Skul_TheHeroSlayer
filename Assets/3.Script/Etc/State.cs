@@ -6,12 +6,34 @@ public enum StateEnum
 {
     Idle,
     Walk,
+    Jump,
+    Fall,
+    Dash,
     Attack,
+    JumpAttack,
+    SkillAttack,
 }
 
 public class State : MonoBehaviour
 {
     [Header("ป๓ลย")]
     [SerializeField] private StateEnum stateEnum;
-    public StateEnum StateEnum { get { return stateEnum; } set { stateEnum = value; } }
+    public StateEnum StateEnum => stateEnum;
+
+    public void SetSateEnum(StateEnum _stateEnum, bool _isGround)
+    {
+        if (_isGround.Equals(false) 
+            && (_stateEnum.Equals(StateEnum.Walk) || _stateEnum.Equals(StateEnum.Idle)))
+        {
+            return;
+        }
+
+        if (stateEnum.Equals(StateEnum.Jump)
+            && (_stateEnum.Equals(StateEnum.Walk) || _stateEnum.Equals(StateEnum.Idle)))
+        {
+            return;
+        }
+
+        stateEnum = _stateEnum;
+    }
 }

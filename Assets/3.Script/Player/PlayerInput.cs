@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     private KeyManager keyManager;
+
     private MoveDirection moveDirection;
     private State state;
     private Gravity gravity;
@@ -13,14 +14,13 @@ public class PlayerInput : MonoBehaviour
     private PlayerAttack playerAttack;
 
     private Rigidbody2D rigid;
+    private BoxCollider2D boxColl;
 
     private int jumpCount;
-    private bool isJumping;
 
     private bool isDash;
     private int dashCount;
     private float dashCoolTimer;
-    private bool isDashing;
 
     private void Awake()
     {
@@ -31,11 +31,15 @@ public class PlayerInput : MonoBehaviour
         TryGetComponent(out anim);
         playerEffect = GetComponentInParent<PlayerEffect>();
         TryGetComponent(out playerAttack);
+        TryGetComponent(out boxColl);
     }
 
     private void Start()
     {
-        FindAnyObjectByType<KeyManager>().TryGetComponent(out keyManager);
+        if (GameManager.Instance.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
+        {
+            keyManager = _keyManager as KeyManager;
+        }
     }
 
     private IEnumerator jumpingCoroutine()
@@ -44,7 +48,6 @@ public class PlayerInput : MonoBehaviour
         moveDirection.enabled = true;
         yield return new WaitForSeconds(0.1f);
         gravity.enabled = true;
-        isJumping = false;
         yield return null;
     }
 
@@ -60,42 +63,25 @@ public class PlayerInput : MonoBehaviour
         yield return null;
     }
 
-    private IEnumerator attackingCoroutine()
-    {
-        //moveDirection.enabled = false;
-        //yield return null;
-        //while (playerAttack.IsAttack)
-        //{
-        //    //if (Input.GetKey(keyManager.Key.KeyCodes[2])
-        //    //   || Input.GetKey(keyManager.Key.KeyCodes[3]))
-        //    //{
-        //    //    rigid.velocity = Vector2.zero;
-        //    //    rigid.velocity = new Vector2(3 * transform.localScale.x, rigid.velocity.y);
-        //    //}
-
-        //    yield return null;
-        //}
-        //moveDirection.enabled = true;
-        yield return null;
-    }
-
     private void attack()
     {
-        state.StateEnum = StateEnum.Attack;
         moveDirection.enabled = true;
-        gravity.enabled = true;
         anim.FallTime = 0f;
         gravity.Velocity = 0f;
-        isDashing = false;
-        anim.IsDash = false;
         StopCoroutine("dashingCoroutine");
-        StopCoroutine("attackingCoroutine");
-        StartCoroutine("attackingCoroutine");
     }
 
     public void InputMoveLeftOrRight(float _moveSpeed)
     {
-        if (isDashing && dashCoolTimer <= 0.22f || playerAttack.IsAttack || playerAttack.IsSkillAttack)
+        if (keyManager == null)
+        {
+            return;
+        }
+
+        if (state.StateEnum.Equals(StateEnum.Dash) && dashCoolTimer <= 0.22f 
+            || state.StateEnum.Equals(StateEnum.Attack)
+            || state.StateEnum.Equals(StateEnum.SkillAttack)
+            || state.StateEnum.Equals(StateEnum.JumpAttack))
         {
             return;
         }
@@ -103,19 +89,13 @@ public class PlayerInput : MonoBehaviour
         Vector2 moveDir = moveDirection.MoveDir;
         Vector2 scale = transform.localScale;
 
-        if (gravity.IsGround)
-        {
-            state.StateEnum = StateEnum.Idle;
-        }
+        state.SetSateEnum(StateEnum.Idle, gravity.IsGround);
         moveDir.x = 0;
 
         if (Input.GetKey(keyManager.Key.KeyCodes[2])
         && Input.GetKey(keyManager.Key.KeyCodes[3]))
         {
-            if (gravity.IsGround)
-            {
-                state.StateEnum = StateEnum.Idle;
-            }
+            state.SetSateEnum(StateEnum.Idle, gravity.IsGround);
             moveDir.x = 0;
             moveDirection.MoveDir = moveDir;
             return;
@@ -124,10 +104,7 @@ public class PlayerInput : MonoBehaviour
         //왼쪽
         if (Input.GetKey(keyManager.Key.KeyCodes[2]))
         {
-            if (gravity.IsGround)
-            {
-                state.StateEnum = StateEnum.Walk;
-            }
+            state.SetSateEnum(StateEnum.Walk, gravity.IsGround);
             moveDir.x = -_moveSpeed;
 
             if (scale.x > 0)
@@ -139,10 +116,7 @@ public class PlayerInput : MonoBehaviour
         //오른쪽
         if (Input.GetKey(keyManager.Key.KeyCodes[3]))
         {
-            if (gravity.IsGround)
-            {
-                state.StateEnum = StateEnum.Walk;
-            }
+            state.SetSateEnum(StateEnum.Walk, gravity.IsGround);
             moveDir.x = _moveSpeed;
 
             if (scale.x < 0)
@@ -157,29 +131,31 @@ public class PlayerInput : MonoBehaviour
 
     public void InputJump(float _jumpForce, int _maxJumpCount)
     {
+        if (keyManager == null)
+        {
+            return;
+        }
+
         if (rigid.velocity.y <= 0 && gravity.IsGround)
         {
-            anim.IsJump = false;
             jumpCount = 0;
+        }
+
+        if (jumpCount.Equals(0) && !gravity.IsGround)
+        {
+            jumpCount = 1;
         }
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) 
             && _maxJumpCount > jumpCount
             && !playerAttack.IsJumpAttack)
         {
-            if (rigid.velocity.y <= 0 && !gravity.IsGround)
-            {
-                jumpCount = 1;
-            }
-
-            isJumping = true;
+            state.SetSateEnum(StateEnum.Jump, gravity.IsGround);
+            gravity.IsGround = false;
             gravity.enabled = false;
             playerAttack.IsAttack = false;
-            anim.IsJump = true;
             anim.FallTime = 0f;
             gravity.Velocity = 0f;
-            isDashing = false;
-            anim.IsDash = false;
             rigid.velocity = new Vector2(rigid.velocity.x, _jumpForce);
             jumpCount++;
             playerEffect.StopDashVFX();
@@ -191,6 +167,11 @@ public class PlayerInput : MonoBehaviour
 
     public void InputDash(float _dashForce, float _dashCoolTime, int _maxDashCount, bool _gravityDash)
     {
+        if (keyManager == null)
+        {
+            return;
+        }
+
         if (isDash)
         {
             dashCoolTimer += Time.deltaTime;
@@ -201,12 +182,10 @@ public class PlayerInput : MonoBehaviour
                 dashCount = 0;
             }
 
-            if (dashCoolTimer >= 0.3f && isDashing && dashCount > 0)
+            if (dashCoolTimer >= 0.3f && !state.StateEnum.Equals(StateEnum.Jump) && dashCount > 0)
             {
                 moveDirection.enabled = true;
                 gravity.enabled = true;
-                isDashing = false;
-                anim.IsDash = false;
             }
         }
 
@@ -219,11 +198,10 @@ public class PlayerInput : MonoBehaviour
             gravity.Velocity = 0f;
             anim.FallTime = 0f;
             dashCoolTimer = 0f;
+            state.SetSateEnum(StateEnum.Dash, gravity.IsGround);
             moveDirection.enabled = false;
-            isDashing = true;
             isDash = true;
             rigid.velocity = Vector2.zero;
-            anim.IsDash = true;
 
             if (_gravityDash)
             {
@@ -245,23 +223,40 @@ public class PlayerInput : MonoBehaviour
 
     public void InputFootholdFall()
     {
+        if (keyManager == null)
+        {
+            return;
+        }
+
         //아래
         //점프
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[1])
+        if (Input.GetKey(keyManager.Key.KeyCodes[1])
             && Input.GetKeyDown(keyManager.Key.KeyCodes[7]))
         {
+            RaycastHit2D hit = Physics2D.BoxCast(new Vector2(boxColl.bounds.center.x, boxColl.bounds.min.y),
+            new Vector2(boxColl.bounds.size.x, boxColl.bounds.size.y * 0.1f), 0.0f, Vector2.down, 0.1f,
+            LayerMask.GetMask("Footboard"));
 
+            if (hit.collider != null)
+            {
+                rigid.velocity = new Vector2(rigid.velocity.x, -3f);
+                gravity.enabled = true;
+                Footboard footboard = hit.collider.gameObject.GetComponent<Footboard>();
+                footboard.FootbaordOff(boxColl);
+            }
         }
     }
 
     public void InputAttack(ref int _formChange)
     {
-        playerAttack.ResetAttack(_formChange);
-
-        if (isJumping)
+        if (keyManager == null)
         {
             return;
         }
+
+        playerAttack.ResetAttack(_formChange);
+
+        playerAttack.ResetSkillAttack();
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[6]))
         {

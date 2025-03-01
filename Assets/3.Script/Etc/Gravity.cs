@@ -13,7 +13,7 @@ public class Gravity : MonoBehaviour
     public float Velocity { get { return velocity; } set { velocity = value; } }
 
     [SerializeField] private bool isGround;
-    public bool IsGround => isGround;
+    public bool IsGround { get { return isGround; } set { isGround = value; } }
 
     private void Awake()
     {
@@ -39,13 +39,6 @@ public class Gravity : MonoBehaviour
                 rigid.velocity = new Vector2(rigid.velocity.x, -gravity);
             }
         }
-        else
-        {
-            if (rigid.velocity.y != 0f)
-            {
-                rigid.velocity = new Vector2(rigid.velocity.x, 0f);
-            }
-        }
     }
 
     private bool groundCheck()
@@ -60,6 +53,13 @@ public class Gravity : MonoBehaviour
         if (Physics2D.BoxCast(new Vector2(boxColl.bounds.center.x, boxColl.bounds.min.y), 
             new Vector2(boxColl.bounds.size.x, boxColl.bounds.size.y * 0.1f), 0.0f, Vector2.down, 0.1f, 
             LayerMask.GetMask("Ground"))) 
+        {
+            isGround = true;
+        }
+
+        if (Physics2D.BoxCast(new Vector2(boxColl.bounds.center.x, boxColl.bounds.min.y),
+            new Vector2(boxColl.bounds.size.x, boxColl.bounds.size.y * 0.1f), 0.0f, Vector2.down, 0.1f,
+            LayerMask.GetMask("Footboard")))
         {
             isGround = true;
         }

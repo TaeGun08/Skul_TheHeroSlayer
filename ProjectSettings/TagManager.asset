@@ -15,9 +15,9 @@ TagManager:
   - Item
   - Ground
   - Footboard
-  - 
-  - 
-  - 
+  - NoTouch
+  - Head
+  - Wall
   - 
   - 
   - 
