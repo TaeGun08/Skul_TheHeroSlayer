@@ -6,6 +6,9 @@ public class LittleBone_Attack : PlayerAttack
 {
     private BoxCollider2D boxColl;
 
+    [Header("리틀본 기본 공격력")]
+    [SerializeField] private int damage;
+
     [Header("리틀본 어택")]
     [SerializeField] private LittleBone_Head littleBone_Head;
     private LittleBone_Head littleBone_Head_Clone;
@@ -38,6 +41,18 @@ public class LittleBone_Attack : PlayerAttack
         }
     }
 
+    private void onCollisions(Collider2D[] colliders)
+    {
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")))
+            {
+                Monster monsterSc = collider.GetComponent<Monster>();
+                monsterSc.Hit(damage, new Vector2(transform.localScale.x, 5f));
+            }
+        }
+    }
+
     private void headCollCheck()
     {
         Collider2D collider = 
@@ -62,6 +77,17 @@ public class LittleBone_Attack : PlayerAttack
         yield return new WaitForSeconds(0.1f);
         moveDir.enabled = true;
         yield return null;
+    }
+
+    public void MonsterCollCheck()
+    {
+        Collider2D[] monsters = Physics2D.OverlapBoxAll(hitBox.bounds.center, hitBox.bounds.size, 0.0f,
+            LayerMask.GetMask("Monster"));
+
+        if (!monsters.Length.Equals(0))
+        {
+            onCollisions(monsters);
+        }
     }
 
     public override void ResetAttack(int _info)

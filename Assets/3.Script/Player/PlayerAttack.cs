@@ -6,6 +6,8 @@ public abstract class PlayerAttack : MonoBehaviour
 {
     protected KeyManager keyManager;
 
+    protected PlayerStatus playerStatus;
+
     protected Animator anim;
     protected MoveDirection moveDir;
     protected Rigidbody2D rigid;
@@ -40,6 +42,7 @@ public abstract class PlayerAttack : MonoBehaviour
 
     protected virtual void Awake()
     {
+        TryGetComponent(out playerStatus);
         TryGetComponent(out anim);
         TryGetComponent(out moveDir);
         TryGetComponent(out rigid);
