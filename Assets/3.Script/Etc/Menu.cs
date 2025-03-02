@@ -4,50 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Menu : MonoBehaviour
+public class Menu : InputMoveUI
 {
-    private GameManager gameManager;
-    private KeyManager keyManager;
-
     [Header("¸Þ´º")]
     [SerializeField] private GameObject menu;
-    [SerializeField] private TMP_Text[] texts = new TMP_Text[5];
-    [SerializeField] private Button[] buttons = new Button[5];
     [SerializeField] private GameObject[] opneUI = new GameObject[4];
-    private int count;
-    private Color color;
-    private Color changeColor;
-
-    private void Awake()
-    {
-        buttonsEvent();
-
-        color.r = 0.1886792f;
-        color.g = 0.1810101f;
-        color.b = 0.1753293f;
-        color.a = 1f;
-
-        changeColor.r = 0.5943396f;
-        changeColor.g = 0.4921148f;
-        changeColor.b = 0.4121129f;
-        changeColor.a = 1f;
-    }
-
-    private void OnEnable()
-    {
-        count = 0;
-        texts[0].color = changeColor;
-        choiceMenu();
-    }
-
-    private void Start()
-    {
-        gameManager = GameManager.Instance;
-        if (gameManager.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
-        {
-            keyManager = _keyManager as KeyManager;
-        }
-    }
 
     private void LateUpdate()
     {
@@ -64,7 +25,7 @@ public class Menu : MonoBehaviour
 
             count = 0;
             texts[0].color = changeColor;
-            choiceMenu();
+            choice();
         }
 
         if (opneUI[0].activeSelf
@@ -81,18 +42,18 @@ public class Menu : MonoBehaviour
             menu.SetActive(gameManager.IsGamePause);
             count = 0;
             texts[0].color = changeColor;
-            choiceMenu();
+            choice();
         }
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[0]))
         {
             count--;
-            choiceMenu();
+            choice();
         }
         else if (Input.GetKeyDown(keyManager.Key.KeyCodes[1]))
         {
             count++;
-            choiceMenu();
+            choice();
         }
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]))
@@ -109,7 +70,7 @@ public class Menu : MonoBehaviour
         }
     }
 
-    private void buttonsEvent()
+    protected override void buttonsEvent()
     {
         buttons[0].onClick.AddListener(() => 
         {
@@ -136,24 +97,5 @@ public class Menu : MonoBehaviour
         {
             opneUI[3].SetActive(true);
         });
-    }
-
-    private void choiceMenu()
-    {
-        if (count < 0)
-        {
-            count = texts.Length - 1;
-        }
-        else if (count > texts.Length - 1)
-        {
-            count = 0;
-        }
-
-        for (int i = 0; i < texts.Length; i++)
-        {
-            texts[i].color = color;
-        }
-
-        texts[count].color = changeColor;
     }
 }

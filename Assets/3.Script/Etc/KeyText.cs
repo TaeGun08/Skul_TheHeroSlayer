@@ -4,26 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class KeyText : MonoBehaviour, IPointerEnterHandler
+public class KeyText : TouchUI
 {
     private KeyManager keyManager;
 
-    private ControllMenu controllMenu;
-
-    private TMP_Text text;
-
-    [Header("≈∞ ¿Œµ¶Ω∫")]
-    [SerializeField] private int index;
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        controllMenu.Count = index;
-        controllMenu.ChoiceText(index);
-    }
+    private TMP_Text keyText;
 
     private void Awake()
     {
-        TryGetComponent(out text);
+        TryGetComponent(out keyText);
     }
 
     private void Start()
@@ -33,13 +22,13 @@ public class KeyText : MonoBehaviour, IPointerEnterHandler
             keyManager = _keyManager as KeyManager;
         }
 
-        GetComponentInParent<ControllMenu>().TryGetComponent(out controllMenu);
+        GetComponentInParent<InputMoveUI>().TryGetComponent(out inputMoveUI);
 
-        text.text = keyManager.Key.KeyCodes[index].ToString();
+        keyText.text = keyManager.Key.KeyCodes[count].ToString();
     }
 
     private void LateUpdate()
     {
-        text.text = keyManager.Key.KeyCodes[index].ToString();
+        keyText.text = keyManager.Key.KeyCodes[count].ToString();
     }
 }

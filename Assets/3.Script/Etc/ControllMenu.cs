@@ -4,35 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ControllMenu : MonoBehaviour
+public class ControllMenu : InputMoveUI
 {
-    private KeyManager keyManager;
-
     [Header("ÄÁÆ®·Ñ")]
-    [SerializeField] private Button[] keyButtons = new Button[13];
-    [SerializeField] private TMP_Text[] texts = new TMP_Text[15];
     [SerializeField] private Button initButton;
     [SerializeField] private Button backButton;
     [SerializeField] private GameObject changeObj;
     [SerializeField] private bool isChangeKey;
-    private Color color;
-    private Color changeColor;
-    private int count;
-    public int Count { set { count = value; } }
     private float delay;
-
-    private void Awake()
-    {
-        color.r = 0.1886792f;
-        color.g = 0.1810101f;
-        color.b = 0.1753293f;
-        color.a = 1f;
-
-        changeColor.r = 0.5943396f;
-        changeColor.g = 0.4921148f;
-        changeColor.b = 0.4121129f;
-        changeColor.a = 1f;
-    }
 
     private void OnGUI()
     {
@@ -50,37 +29,6 @@ public class ControllMenu : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        if (GameManager.Instance.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
-        {
-            keyManager = _keyManager as KeyManager;
-        }
-
-        texts[count].color = changeColor;
-        delay = 0f;
-
-        for (int i = 0; i < keyButtons.Length; i++)
-        {
-            keyButtons[i].onClick.AddListener(() =>
-            {
-                changeObj.SetActive(true);
-                isChangeKey = true;
-            });
-        }
-
-        initButton.onClick.AddListener(() =>
-        {
-            keyManager.ResetKey();
-        });
-
-        backButton.onClick.AddListener(() =>
-        {
-            gameObject.SetActive(false);
-            count = 0;
-        });
-    }
-
     private void LateUpdate()
     {
         if (isChangeKey)
@@ -96,12 +44,23 @@ public class ControllMenu : MonoBehaviour
             if (Input.GetKeyDown(keyManager.Key.KeyCodes[0]))
             {
                 count--;
-                choiceKey();
+                choice();
             }
             else if (Input.GetKeyDown(keyManager.Key.KeyCodes[1]))
             {
                 count++;
-                choiceKey();
+                choice();
+            }
+
+            if (Input.GetKeyDown(keyManager.Key.KeyCodes[2]))
+            {
+                count = 0;
+                choice();
+            }
+            else if (Input.GetKeyDown(keyManager.Key.KeyCodes[3]))
+            {
+                count = 7;
+                choice();
             }
 
             if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) && delay <= 0f)
@@ -110,13 +69,13 @@ public class ControllMenu : MonoBehaviour
                 {
                     keyManager.ResetKey();
                     count = 0;
-                    choiceKey();
+                    choice();
                 }
                 else if (count.Equals(texts.Length - 1))
                 {
                     gameObject.SetActive(false);
                     count = 0;
-                    choiceKey();
+                    choice();
                 }
                 else
                 {
@@ -136,32 +95,29 @@ public class ControllMenu : MonoBehaviour
         }
     }
 
-    private void choiceKey()
+    protected override void buttonsEvent()
     {
-        if (count < 0)
-        {
-            count = texts.Length - 1;
-        }
-        else if (count > texts.Length - 1)
-        {
-            count = 0;
-        }
-
-        for (int i = 0; i < texts.Length; i++)
-        {
-            texts[i].color = color;
-        }
-
         texts[count].color = changeColor;
-    }
+        delay = 0f;
 
-    public void ChoiceText(int _index)
-    {
-        for (int i = 0; i < texts.Length; i++)
+        for (int i = 0; i < buttons.Length; i++)
         {
-            texts[i].color = color;
+            buttons[i].onClick.AddListener(() =>
+            {
+                changeObj.SetActive(true);
+                isChangeKey = true;
+            });
         }
 
-        texts[_index].color = changeColor;
+        initButton.onClick.AddListener(() =>
+        {
+            keyManager.ResetKey();
+        });
+
+        backButton.onClick.AddListener(() =>
+        {
+            gameObject.SetActive(false);
+            count = 0;
+        });
     }
 }

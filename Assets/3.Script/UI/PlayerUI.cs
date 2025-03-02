@@ -46,6 +46,6 @@ public class PlayerUI : MonoBehaviour
         playerState.SetCoolTime(1, playerAttack.SkillBCollTimer, playerAttack.SkillBCollTime);
         playerState.SetKeyText(0, keyManager.Key.KeyCodes[9]);
         playerState.SetKeyText(1, keyManager.Key.KeyCodes[10]);
-        playerState.HpBar.value = playerStatus.Status.curHp / playerStatus.Status.hp;
+        playerState.HpBar.value = playerStatus.PlayingGameStatus.curHp / playerStatus.PlayingGameStatus.hp;
     }
 }
