@@ -27,9 +27,9 @@ public class PlayerStatus : MonoBehaviour
     private Dictionary<string, Status> playerStatus = new Dictionary<string, Status>();
 
     [Header("스테이터스")]
-    private Status status;
+    [SerializeField] private Status status;
     public Status Status { get { return status; } set { status = value; } }
-    private Status playingGameStatus;
+    [SerializeField] private Status playingGameStatus;
     public Status PlayingGameStatus { get { return playingGameStatus; } set { playingGameStatus = value; } }
 
     private void Awake()
@@ -40,15 +40,15 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            resetStatusData();
-            restartStatus();
+            ResetStatusData();
+            RestartStatus();
             playerStatus.Add("Status", status);
             playerStatus.Add("PlayingGameStatus", playingGameStatus);
             SetSaveStatus();
         }
     }
 
-    private void resetStatusData()
+    public void ResetStatusData()
     {
         status = new Status();
         status.hp = 100;
@@ -67,7 +67,7 @@ public class PlayerStatus : MonoBehaviour
         status.rookieOn = false;
     }
 
-    private void restartStatus()
+    public void RestartStatus()
     {
         playingGameStatus = new Status();
         playingGameStatus.hp = status.hp;

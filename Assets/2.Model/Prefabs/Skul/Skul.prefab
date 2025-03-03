@@ -49,13 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skuls:
   - {fileID: 1734914054686876365, guid: c343708f59791bd4dbc4b59605b568a1, type: 3}
-  skullCount: []
-  skulA:
-    SkulIndex: -1
-    Rank: 0
-  skulB:
-    SkulIndex: -1
-    Rank: 0
+  - {fileID: 8069900471504941888, guid: 0ec8aaf8d6c542145b843a100fc3ae24, type: 3}
+  changeHead: {fileID: 4643603517538207379, guid: e9c314355a994b8448447a33aa460fdf, type: 3}
 --- !u!114 &2219227369249550313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,4 +88,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa2e1f423d176814381dbe261bd86a3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  receivedDamage: 78.2
+  status:
+    hp: 0
+    curHp: 0
+    receivedDamage: 0
+    physicalAttackPower: 0
+    magicAttackPower: 0
+    attackSpeed: 0
+    moveSpeed: 0
+    focusSpeed: 0
+    skillCoolSpeed: 0
+    switchCoolSpeed: 0
+    essenceCoolSpeed: 0
+    crit: 0
+    critDamage: 0
+    rookieOn: 0
+  playingGameStatus:
+    hp: 0
+    curHp: 0
+    receivedDamage: 0
+    physicalAttackPower: 0
+    magicAttackPower: 0
+    attackSpeed: 0
+    moveSpeed: 0
+    focusSpeed: 0
+    skillCoolSpeed: 0
+    switchCoolSpeed: 0
+    essenceCoolSpeed: 0
+    crit: 0
+    critDamage: 0
+    rookieOn: 0

@@ -7,6 +7,7 @@ public class CameraMovement : MonoBehaviour
 {
     private GameManager gameManager;
     private CinemachineVirtualCamera virtualCamera;
+    private GameObject skul;
 
     private void Awake()
     {
@@ -20,8 +21,21 @@ public class CameraMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (virtualCamera.Follow == null && gameManager.OnSkul != null)
+        if (gameManager.OnSkul == null)
         {
+            return;
+        }
+        else
+        {
+            if (skul != null && !skul.Equals(gameManager.OnSkul))
+            {
+                virtualCamera.Follow = null;
+            }
+        }
+
+        if (virtualCamera.Follow == null)
+        {
+            skul = gameManager.OnSkul;
             virtualCamera.Follow = gameManager.OnSkul.transform;
         }
     }

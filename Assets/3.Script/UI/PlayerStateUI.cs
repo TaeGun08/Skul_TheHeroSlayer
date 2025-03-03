@@ -9,12 +9,15 @@ public class PlayerStateUI : MonoBehaviour
     private CanvasManager canvasManager;
 
     [Header("ป๓ลย")]
-    [SerializeField] private Image[] icon = new Image[2];
-    [SerializeField] private Image[] skill_Icon = new Image[2];
-    [SerializeField] private Image[] coolTime_Img = new Image[2];
-    [SerializeField] private TMP_Text[] keyText = new TMP_Text[3];
+    [SerializeField] private Image[] icon;
+    public Image[] Icon { get { return icon; } set { icon = value; } }
+    [SerializeField] private Image[] skill_Icon;
+    public Image[] Skill_Icon { get { return skill_Icon; } set { skill_Icon = value; } }
+    [SerializeField] private Image[] coolTime_Img;
+    [SerializeField] private TMP_Text[] keyText;
+    [SerializeField] private TMP_Text hpText;
     [SerializeField] private Slider hpBar;
-    public Slider HpBar { get { return hpBar; } set { hpBar = value; } }
+    [SerializeField] private Image switchTimerImage;
 
     private void OnEnable()
     {
@@ -37,8 +40,19 @@ public class PlayerStateUI : MonoBehaviour
         coolTime_Img[_index].fillAmount = _coolTimer / _collTime;
     }
 
+    public void SetHp(int _curHp, int _hp)
+    {
+        hpText.text = $"{_curHp} / {_hp}";
+        hpBar.value = (float)_curHp / _hp;
+    }
+
     public void SetKeyText(int _index, KeyCode _key)
     {
         keyText[_index].text = _key.ToString();
+    }
+
+    public void SetSwitchTimer(float _timer)
+    {
+        switchTimerImage.fillAmount = _timer / 10;
     }
 }

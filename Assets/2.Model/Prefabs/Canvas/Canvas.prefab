@@ -276,6 +276,7 @@ GameObject:
   - component: {fileID: 131043356585249116}
   - component: {fileID: 366597346110298196}
   - component: {fileID: 262500558757369183}
+  - component: {fileID: -674189807173963033}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -379,6 +380,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab223b6d641c05a418694121600d554d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-674189807173963033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169975211910408837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72dac44f818b55448a2bcbf2f90ec268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &304110057518069924
@@ -1108,6 +1121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 2
+  touchOff: 0
 --- !u!1 &811848812934500928
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,6 +1361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 1
+  touchOff: 0
 --- !u!1 &1129360774411056218
 GameObject:
   m_ObjectHideFlags: 0
@@ -2073,14 +2088,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6612245, g: 0.4481132, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 94263a0464e917a4ebbb9e1089fed18a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b5f1971e55522f04b869086bb051a783, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3165,6 +3180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 0
+  touchOff: 0
 --- !u!1 &1937258489810859407
 GameObject:
   m_ObjectHideFlags: 0
@@ -4072,6 +4088,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 5914437358726084892}
   count: 14
+  touchOff: 0
 --- !u!1 &2218494364482688872
 GameObject:
   m_ObjectHideFlags: 0
@@ -4102,6 +4119,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7013895677080480766}
   - {fileID: 5033862549960968608}
   m_Father: {fileID: 8499304039320423458}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4586,6 +4604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 5914437358726084892}
   count: 14
+  touchOff: 0
 --- !u!1 &2324142646435076092
 GameObject:
   m_ObjectHideFlags: 0
@@ -5348,6 +5367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 9
+  touchOff: 0
 --- !u!1 &2630856320580373605
 GameObject:
   m_ObjectHideFlags: 0
@@ -5631,6 +5651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 10
+  touchOff: 0
 --- !u!1 &2742127997734618208
 GameObject:
   m_ObjectHideFlags: 0
@@ -6082,6 +6103,7 @@ GameObject:
   - component: {fileID: 7947957779266190374}
   - component: {fileID: 9079443584620234955}
   - component: {fileID: 6607604050465287228}
+  - component: {fileID: 1151503817093612182}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -6139,7 +6161,7 @@ MonoBehaviour:
   m_text: Space
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f222eed2658d7914bb3b9ef77af541c6, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2430599253284835844, guid: f222eed2658d7914bb3b9ef77af541c6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6163,7 +6185,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26
+  m_fontSize: 20.7
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6202,9 +6224,24 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1151503817093612182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2770910886232157744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d0d399bbe0a37e448997881a377fb04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputMoveUI: {fileID: 0}
+  count: 12
+  touchOff: 1
 --- !u!1 &2794624396526978806
 GameObject:
   m_ObjectHideFlags: 0
@@ -6630,6 +6667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 2911132083581897661}
   count: 4
+  touchOff: 0
 --- !u!1 &2934917440308181212
 GameObject:
   m_ObjectHideFlags: 0
@@ -7727,6 +7765,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 0
+  touchOff: 0
 --- !u!1 &3481945753771680206
 GameObject:
   m_ObjectHideFlags: 0
@@ -8091,7 +8130,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 66ec613ca3141d64da35df5e5c7184b5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cbdafce87e58deb469a9b1ff96f8536c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8250,6 +8289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 4694770586254655337}
   count: 0
+  touchOff: 0
 --- !u!1 &3690242882672353474
 GameObject:
   m_ObjectHideFlags: 0
@@ -8863,6 +8903,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 7
+  touchOff: 0
 --- !u!1 &4024850001633628709
 GameObject:
   m_ObjectHideFlags: 0
@@ -9112,7 +9153,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6adba9cb11bb29438cf03350b77adb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: []
+  icon:
+  - {fileID: 1883335638456906034}
+  - {fileID: 1619863195785806536}
   skill_Icon:
   - {fileID: 5532739636634029921}
   - {fileID: 8996413583815649359}
@@ -9122,7 +9165,9 @@ MonoBehaviour:
   keyText:
   - {fileID: 8341177953328145123}
   - {fileID: 7193232169695549261}
+  hpText: {fileID: 8567651271871708129}
   hpBar: {fileID: 1283629069236394579}
+  switchTimerImage: {fileID: 29371759728347869}
 --- !u!1 &4088451171860176613
 GameObject:
   m_ObjectHideFlags: 0
@@ -9308,6 +9353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 2911132083581897661}
   count: 2
+  touchOff: 0
 --- !u!1 &4150241527660527572
 GameObject:
   m_ObjectHideFlags: 0
@@ -9457,6 +9503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 6
+  touchOff: 0
 --- !u!1 &4161718832458218300
 GameObject:
   m_ObjectHideFlags: 0
@@ -9688,6 +9735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 11
+  touchOff: 0
 --- !u!1 &4346159130129665274
 GameObject:
   m_ObjectHideFlags: 0
@@ -9837,6 +9885,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 8
+  touchOff: 0
 --- !u!1 &4401615904157941999
 GameObject:
   m_ObjectHideFlags: 0
@@ -10522,6 +10571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 5914437358726084892}
   count: 13
+  touchOff: 0
 --- !u!1 &4570049834541438641
 GameObject:
   m_ObjectHideFlags: 0
@@ -11187,6 +11237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 2911132083581897661}
   count: 3
+  touchOff: 0
 --- !u!1 &4807774276198037083
 GameObject:
   m_ObjectHideFlags: 0
@@ -11800,6 +11851,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 1
+  touchOff: 0
 --- !u!1 &5202621437433514264
 GameObject:
   m_ObjectHideFlags: 0
@@ -12044,6 +12096,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 6182168999830750916}
   count: 0
+  touchOff: 0
 --- !u!1 &5402602035854895367
 GameObject:
   m_ObjectHideFlags: 0
@@ -12193,6 +12246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 3
+  touchOff: 0
 --- !u!1 &5438019692129437666
 GameObject:
   m_ObjectHideFlags: 0
@@ -12342,6 +12396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 12
+  touchOff: 0
 --- !u!1 &5448692452365032832
 GameObject:
   m_ObjectHideFlags: 0
@@ -13047,6 +13102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 2911132083581897661}
   count: 1
+  touchOff: 0
 --- !u!1 &5493956489404924981
 GameObject:
   m_ObjectHideFlags: 0
@@ -13122,6 +13178,81 @@ MonoBehaviour:
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &5587359144508591485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7013895677080480766}
+  - component: {fileID: 2008162289064744469}
+  - component: {fileID: 29371759728347869}
+  m_Layer: 5
+  m_Name: TimerImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7013895677080480766
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5587359144508591485}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6810360132876828598}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2008162289064744469
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5587359144508591485}
+  m_CullTransparentMesh: 1
+--- !u!114 &29371759728347869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5587359144508591485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 2
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 20
 --- !u!1 &5589744238120122787
 GameObject:
   m_ObjectHideFlags: 0
@@ -14446,6 +14577,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 4694770586254655337}
   count: 1
+  touchOff: 0
 --- !u!1 &6942056058789262921
 GameObject:
   m_ObjectHideFlags: 0
@@ -14595,6 +14727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 5
+  touchOff: 0
 --- !u!1 &6998959693495996438
 GameObject:
   m_ObjectHideFlags: 0
@@ -14834,6 +14967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 5171218885510747718}
   count: 1
+  touchOff: 0
 --- !u!1 &7048564434493502143
 GameObject:
   m_ObjectHideFlags: 0
@@ -15073,6 +15207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 0}
   count: 4
+  touchOff: 0
 --- !u!1 &7073564418983307715
 GameObject:
   m_ObjectHideFlags: 0
@@ -16131,6 +16266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 2911132083581897661}
   count: 0
+  touchOff: 0
 --- !u!1 &7522912631734265385
 GameObject:
   m_ObjectHideFlags: 0
@@ -17376,6 +17512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 5171218885510747718}
   count: 0
+  touchOff: 0
 --- !u!1 &8229500670037094793
 GameObject:
   m_ObjectHideFlags: 0
@@ -18628,6 +18765,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputMoveUI: {fileID: 6182168999830750916}
   count: 1
+  touchOff: 0
 --- !u!1 &8615906243302089777
 GameObject:
   m_ObjectHideFlags: 0

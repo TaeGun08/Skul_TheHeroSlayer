@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("½ºÄÃ")]
     [SerializeField] private SkulData skul;
     public SkulData Skul => skul;
-    [SerializeField] private SkulData skulData;
+    private SkulData skulData;
     public SkulData SkulData { get { return skulData; } set { skulData = value; } }
     [SerializeField] private GameObject onSkul;
     public GameObject OnSkul { get { return onSkul; } set { onSkul = value; } }
@@ -52,5 +52,6 @@ public class GameManager : MonoBehaviour
     public void NewGame()
     {
         Destroy(skulData.gameObject);
+        PlayerPrefs.DeleteKey("SaveSkul");
     }
 }

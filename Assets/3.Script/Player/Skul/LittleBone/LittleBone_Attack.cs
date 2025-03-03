@@ -48,14 +48,14 @@ public class LittleBone_Attack : PlayerAttack
             if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")))
             {
                 Monster monsterSc = collider.GetComponent<Monster>();
-                monsterSc.Hit(damage, new Vector2(transform.localScale.x, 5f));
+                monsterSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 1f));
             }
         }
     }
 
     private void headCollCheck()
     {
-        Collider2D collider = 
+        Collider2D collider =
             Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f, LayerMask.GetMask("Head"));
         onCollision(collider);
     }
@@ -136,7 +136,7 @@ public class LittleBone_Attack : PlayerAttack
 
             rigid.velocity = new Vector2(0f, rigid.velocity.y);
 
-            state.SetSateEnum(gravity.IsGround == true ? StateEnum.Attack : StateEnum.JumpAttack, gravity.IsGround);
+            state.SetStateEnum(gravity.IsGround == true ? StateEnum.Attack : StateEnum.JumpAttack, gravity.IsGround);
 
             if (Input.GetKey(keyManager.Key.KeyCodes[2]))
             {
@@ -189,7 +189,7 @@ public class LittleBone_Attack : PlayerAttack
 
     public override void SkillAttack(int _skillnumber)
     {
-        if (!isSkillAttack)
+        if (!isSkillAttack && !state.StateEnum.Equals(StateEnum.SwitchAttack))
         {
             if (_skillnumber.Equals(0) && skillACollTimer <= 0f)
             {
@@ -199,7 +199,7 @@ public class LittleBone_Attack : PlayerAttack
                 rigid.velocity = Vector2.zero;
                 gravity.enabled = false;
                 gravity.Velocity = 0f;
-                state.SetSateEnum(StateEnum.SkillAttack, gravity.IsGround);
+                state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
                 skillACollTimer = skillACollTime;
 
                 anim.SetBool("isSkillAttack", isSkillAttack);
@@ -241,7 +241,7 @@ public class LittleBone_Attack : PlayerAttack
                     rigid.velocity = Vector2.zero;
                     gravity.enabled = false;
                     gravity.Velocity = 0f;
-                    state.SetSateEnum(StateEnum.SkillAttack, gravity.IsGround);
+                    state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
 
                     skillBCollTimer = skillBCollTime;
                     skillACollTimer = 0f;
@@ -263,7 +263,7 @@ public class LittleBone_Attack : PlayerAttack
         isComboAttack = false;
         anim.SetBool("isAttack", isAttack);
         anim.SetBool("isComboAttack", isComboAttack);
-        state.SetSateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
+        state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
     }
 
     public override void EndAttack()
@@ -275,21 +275,31 @@ public class LittleBone_Attack : PlayerAttack
         anim.SetBool("isAttack", isAttack);
         anim.SetInteger("AttackCount", attackCount);
         anim.SetBool("isComboAttack", isComboAttack);
-        state.SetSateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
+        state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
     }
 
     public override void EndSkillAttack()
     {
         isSkillAttack = false;
         anim.SetBool("isSkillAttack", isSkillAttack);
-        state.SetSateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
+        state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
     }
 
-    public override void Hit(int _hitMonsters)
+    public override IEnumerator SwitchAttackCoroutine()
     {
-        if (isAttack)
+        if (isSwitchAttack)
         {
-
+            state.SetStateEnum(StateEnum.SwitchAttack, gravity.IsGround);
+            anim.SetTrigger("SwitchAttack");
+            moveDir.MoveDir = Vector2.zero;
+            moveDir.MoveOff = true;
+            rigid.velocity = Vector2.zero;
+            rigid.velocity = new Vector2(2f * transform.localScale.x, 0f);
+            damage = 4;
         }
+        yield return new WaitForSeconds(2f);
+        damage = 8;
+        moveDir.MoveOff = false;
+        state.SetStateEnum(StateEnum.Idle, true);
     }
 }

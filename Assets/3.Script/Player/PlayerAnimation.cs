@@ -30,7 +30,7 @@ public class PlayerAnimation : MonoBehaviour
         if (rigid.velocity.y < 0 && !gravity.IsGround)
         {
             fallTime += Time.deltaTime * 2f;
-            state.SetSateEnum(StateEnum.Fall, gravity.IsGround);
+            state.SetStateEnum(StateEnum.Fall, gravity.IsGround);
             if (fallTime >= 1f)
             {
                 fallTime = 1f;

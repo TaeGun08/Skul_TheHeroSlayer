@@ -1,0 +1,91 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class IceWizrd : Monster
+{
+    [Header("아이스 위자드")]
+    [SerializeField] private GameObject ice;
+    [SerializeField] private CircleCollider2D playerCheckColl;
+    [SerializeField] private float attackCoolTime;
+    private Coroutine iceCo;
+    private bool isIce;
+
+    private void Update()
+    {
+        hitCollCheck();
+        anim.SetBool("isAttack", isAttack);
+
+        if (isHit && iceCo != null)
+        {
+            StopCoroutine(iceCo);
+            iceCo = null;
+        }
+    }
+
+    private IEnumerator shootFireBallCoroutine(Transform _targetTrs)
+    {
+        yield return new WaitForSeconds(2f);
+        float timer = 0f;
+        float delayTimer = 0f;
+        WaitForSeconds wfs = new WaitForSeconds(0.01f);
+        while (isAttack)
+        {
+            if (!isIce)
+            {
+                delayTimer += Time.deltaTime;
+                if (delayTimer >= 0.5f)
+                {
+                    Instantiate(ice, _targetTrs.position + new Vector3(0f, 3f), Quaternion.identity);
+                    delayTimer = 0f;
+                    isIce = true;
+                }
+            }
+            else
+            {
+                timer += Time.deltaTime;
+                if (timer >= attackCoolTime)
+                {
+                    timer = 0f;
+                    isIce = false;
+                }
+            }
+            yield return wfs;
+        }
+
+        yield return null;
+    }
+
+    private void hitCollCheck()
+    {
+        Collider2D collider = Physics2D.OverlapCircle(playerCheckColl.bounds.center, playerCheckColl.radius,
+            LayerMask.GetMask("Player"));
+        attack(collider);
+    }
+
+    protected override void attack(Collider2D _collider = null)
+    {
+        if (_collider == null)
+        {
+            isAttack = false;
+            state.SetStateEnum(StateEnum.Idle, true);
+            anim.SetBool("isAttackReady", false);
+            return;
+        }
+
+        if (!state.StateEnum.Equals(StateEnum.Attack) && !isHit
+            && _collider.gameObject.layer.Equals(LayerMask.NameToLayer("Player")))
+        {
+            isAttack = true;
+            state.SetStateEnum(StateEnum.Attack, true);
+            anim.SetBool("isAttackReady", true);
+            iceCo = StartCoroutine(shootFireBallCoroutine(_collider.transform));
+        }
+    }
+
+    public override void Hit(int _damage, Vector2 _knockback)
+    {
+        base.Hit(_damage, _knockback);
+        isHit = true;
+    }
+}

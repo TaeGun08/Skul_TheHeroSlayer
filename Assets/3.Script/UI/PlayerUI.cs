@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class PlayerUI : MonoBehaviour
 {
+    private GameManager gameManager;
     private KeyManager keyManager;
     private CanvasManager canvasManager;
 
-    private PlayerStateUI playerState;
+    private PlayerStateUI playerStateUI;
+    public PlayerStateUI PlayerStateUI => playerStateUI;
 
+    private SkulData skulData;
     private PlayerStatus playerStatus;
 
     private GameObject skul;
@@ -16,36 +19,50 @@ public class PlayerUI : MonoBehaviour
 
     private void Awake()
     {
+        TryGetComponent(out skulData);
         TryGetComponent(out playerStatus);
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        if (GameManager.Instance.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
+        gameManager = GameManager.Instance;
+
+        if (gameManager.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
         {
             keyManager = _keyManager as KeyManager;
         }
 
-        if (GameManager.Instance.ManagersDictionary.TryGetValue("CanvasManager", out object _canvasManager))
+        if (gameManager.ManagersDictionary.TryGetValue("CanvasManager", out object _canvasManager))
         {
             canvasManager = _canvasManager as CanvasManager;
         }
 
         if (canvasManager.UIDictionary.TryGetValue("PlayerState", out object _playerState))
         {
-            playerState = _playerState as PlayerStateUI;
+            playerStateUI = _playerState as PlayerStateUI;
         }
-
-        skul = GameManager.Instance.OnSkul;
-        skul.GetComponent<PlayerAttack>().TryGetComponent(out playerAttack);
     }
 
     private void LateUpdate()
     {
-        playerState.SetCoolTime(0, playerAttack.SkillACollTimer, playerAttack.SkillACollTime);
-        playerState.SetCoolTime(1, playerAttack.SkillBCollTimer, playerAttack.SkillBCollTime);
-        playerState.SetKeyText(0, keyManager.Key.KeyCodes[9]);
-        playerState.SetKeyText(1, keyManager.Key.KeyCodes[10]);
-        playerState.HpBar.value = playerStatus.PlayingGameStatus.curHp / playerStatus.PlayingGameStatus.hp;
+        if (gameManager.OnSkul == null)
+        {
+            return;
+        }
+        else if (gameManager.OnSkul != null && skul == null)
+        {
+            skul = gameManager.OnSkul;
+            skul.GetComponent<PlayerAttack>().TryGetComponent(out playerAttack);
+        }
+
+        if (playerAttack != null)
+        {
+            playerStateUI.SetCoolTime(0, playerAttack.SkillACollTimer, playerAttack.SkillACollTime);
+            playerStateUI.SetCoolTime(1, playerAttack.SkillBCollTimer, playerAttack.SkillBCollTime);
+            playerStateUI.SetKeyText(0, keyManager.Key.KeyCodes[9]);
+            playerStateUI.SetKeyText(1, keyManager.Key.KeyCodes[10]);
+            playerStateUI.SetHp(playerStatus.PlayingGameStatus.curHp, playerStatus.PlayingGameStatus.hp);
+            playerStateUI.SetSwitchTimer(skulData.Timer);
+        }
     }
 }

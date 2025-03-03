@@ -12,6 +12,7 @@ public enum StateEnum
     Attack,
     JumpAttack,
     SkillAttack,
+    SwitchAttack,
 }
 
 public class State : MonoBehaviour
@@ -20,7 +21,7 @@ public class State : MonoBehaviour
     [SerializeField] private StateEnum stateEnum;
     public StateEnum StateEnum => stateEnum;
 
-    public void SetSateEnum(StateEnum _stateEnum, bool _isGround)
+    public void SetStateEnum(StateEnum _stateEnum, bool _isGround)
     {
         if (_isGround.Equals(false) 
             && (_stateEnum.Equals(StateEnum.Walk) || _stateEnum.Equals(StateEnum.Idle)))

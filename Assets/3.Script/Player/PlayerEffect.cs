@@ -7,6 +7,7 @@ public class PlayerEffect : MonoBehaviour
     private GameManager gameManager;
 
     private SpriteRenderer spriteRen;
+    public SpriteRenderer SpriteRen { set { spriteRen = value; } }
 
     [Header("VFX")]
     [SerializeField] private DashPrefab dashPrefab;
@@ -23,7 +24,14 @@ public class PlayerEffect : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
-        gameManager.OnSkul.TryGetComponent(out spriteRen);
+    }
+
+    private void LateUpdate()
+    {
+        if (spriteRen == null && gameManager.OnSkul != null)
+        {
+            gameManager.OnSkul.TryGetComponent(out spriteRen);
+        }
     }
 
     private IEnumerator DashVFX()
@@ -34,12 +42,15 @@ public class PlayerEffect : MonoBehaviour
         {
             if (!dashPool[i].gameObject.activeSelf && count < 7)
             {
-                dashPool[i].gameObject.SetActive(true);
-                dashPool[i].Sprite = spriteRen.sprite;
-                dashPool[i].IsDash = true;
-                dashPool[i].transform.position = spriteRen.transform.position;
-                dashPool[i].transform.localScale = spriteRen.transform.localScale;
-                count++;
+                if (spriteRen != null)
+                {
+                    dashPool[i].gameObject.SetActive(true);
+                    dashPool[i].Sprite = spriteRen.sprite;
+                    dashPool[i].IsDash = true;
+                    dashPool[i].transform.position = spriteRen.transform.position;
+                    dashPool[i].transform.localScale = spriteRen.transform.localScale;
+                    count++;
+                }
                 yield return wfs;
             }
         }

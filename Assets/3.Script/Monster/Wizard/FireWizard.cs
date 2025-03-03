@@ -69,13 +69,17 @@ public class FireWizard : Monster
     {
         if (_collider == null)
         {
+            isAttack = false;
+            state.SetStateEnum(StateEnum.Idle, true);
+            anim.SetBool("isAttackReady", false);
             return;
         }
 
-        if (!isAttack && !isHit
+        if (!state.StateEnum.Equals(StateEnum.Attack) && !isHit
             && _collider.gameObject.layer.Equals(LayerMask.NameToLayer("Player")))
         {
             isAttack = true;
+            state.SetStateEnum(StateEnum.Attack, true);
             anim.SetBool("isAttackReady", true);
             shootFireBallCo = StartCoroutine(shootFireBallCoroutine(_collider.transform));
         }

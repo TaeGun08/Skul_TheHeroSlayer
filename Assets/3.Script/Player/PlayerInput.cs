@@ -6,6 +6,8 @@ public class PlayerInput : MonoBehaviour
 {
     private KeyManager keyManager;
 
+    private SkulData skulData;
+
     private MoveDirection moveDirection;
     private State state;
     private Gravity gravity;
@@ -21,6 +23,7 @@ public class PlayerInput : MonoBehaviour
     private bool isDash;
     private int dashCount;
     private float dashCoolTimer;
+    private float dashTime;
 
     private void Awake()
     {
@@ -40,6 +43,8 @@ public class PlayerInput : MonoBehaviour
         {
             keyManager = _keyManager as KeyManager;
         }
+
+        GetComponentInParent<SkulData>().TryGetComponent(out skulData);
     }
 
     private IEnumerator jumpingCoroutine()
@@ -54,7 +59,7 @@ public class PlayerInput : MonoBehaviour
     private IEnumerator dashingCoroutine()
     {
         playerEffect.StartDashVFX();
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(dashTime);
         moveDirection.enabled = true;
         yield return null;
         anim.FallTime = 0f;
@@ -81,7 +86,8 @@ public class PlayerInput : MonoBehaviour
         if (state.StateEnum.Equals(StateEnum.Dash) && dashCoolTimer <= 0.22f 
             || state.StateEnum.Equals(StateEnum.Attack)
             || state.StateEnum.Equals(StateEnum.SkillAttack)
-            || state.StateEnum.Equals(StateEnum.JumpAttack))
+            || state.StateEnum.Equals(StateEnum.JumpAttack)
+            || state.StateEnum.Equals(StateEnum.SwitchAttack))
         {
             return;
         }
@@ -89,13 +95,13 @@ public class PlayerInput : MonoBehaviour
         Vector2 moveDir = moveDirection.MoveDir;
         Vector2 scale = transform.localScale;
 
-        state.SetSateEnum(StateEnum.Idle, gravity.IsGround);
+        state.SetStateEnum(StateEnum.Idle, gravity.IsGround);
         moveDir.x = 0;
 
         if (Input.GetKey(keyManager.Key.KeyCodes[2])
         && Input.GetKey(keyManager.Key.KeyCodes[3]))
         {
-            state.SetSateEnum(StateEnum.Idle, gravity.IsGround);
+            state.SetStateEnum(StateEnum.Idle, gravity.IsGround);
             moveDir.x = 0;
             moveDirection.MoveDir = moveDir;
             return;
@@ -104,7 +110,7 @@ public class PlayerInput : MonoBehaviour
         //¿ÞÂÊ
         if (Input.GetKey(keyManager.Key.KeyCodes[2]))
         {
-            state.SetSateEnum(StateEnum.Walk, gravity.IsGround);
+            state.SetStateEnum(StateEnum.Walk, gravity.IsGround);
             moveDir.x = -_moveSpeed;
 
             if (scale.x > 0)
@@ -116,7 +122,7 @@ public class PlayerInput : MonoBehaviour
         //¿À¸¥ÂÊ
         if (Input.GetKey(keyManager.Key.KeyCodes[3]))
         {
-            state.SetSateEnum(StateEnum.Walk, gravity.IsGround);
+            state.SetStateEnum(StateEnum.Walk, gravity.IsGround);
             moveDir.x = _moveSpeed;
 
             if (scale.x < 0)
@@ -131,7 +137,7 @@ public class PlayerInput : MonoBehaviour
 
     public void InputJump(float _jumpForce, int _maxJumpCount)
     {
-        if (keyManager == null)
+        if (keyManager == null || state.StateEnum.Equals(StateEnum.SwitchAttack))
         {
             return;
         }
@@ -150,7 +156,7 @@ public class PlayerInput : MonoBehaviour
             && _maxJumpCount > jumpCount
             && !playerAttack.IsJumpAttack)
         {
-            state.SetSateEnum(StateEnum.Jump, gravity.IsGround);
+            state.SetStateEnum(StateEnum.Jump, gravity.IsGround);
             gravity.IsGround = false;
             gravity.enabled = false;
             playerAttack.IsAttack = false;
@@ -165,9 +171,9 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void InputDash(float _dashForce, float _dashCoolTime, int _maxDashCount, bool _gravityDash)
+    public void InputDash(float _dashForce, float _dashCoolTime, int _maxDashCount, bool _gravityDash, float _dashTime, float _dashUpForce)
     {
-        if (keyManager == null)
+        if (keyManager == null || state.StateEnum.Equals(StateEnum.SwitchAttack))
         {
             return;
         }
@@ -193,12 +199,13 @@ public class PlayerInput : MonoBehaviour
             && dashCount < _maxDashCount
                 && dashCoolTimer < 0.3f)
         {
+            dashTime = _dashTime;
             playerAttack.EndAttack();
             playerAttack.IsAttack = false;
             gravity.Velocity = 0f;
             anim.FallTime = 0f;
             dashCoolTimer = 0f;
-            state.SetSateEnum(StateEnum.Dash, gravity.IsGround);
+            state.SetStateEnum(StateEnum.Dash, gravity.IsGround);
             moveDirection.enabled = false;
             isDash = true;
             rigid.velocity = Vector2.zero;
@@ -206,7 +213,7 @@ public class PlayerInput : MonoBehaviour
             if (_gravityDash)
             {
                 gravity.enabled = true;
-                rigid.velocity += new Vector2(_dashForce * transform.localScale.x, 5f);
+                rigid.velocity += new Vector2(_dashForce * transform.localScale.x, _dashUpForce);
             }
             else
             {
@@ -249,7 +256,7 @@ public class PlayerInput : MonoBehaviour
 
     public void InputAttack(ref int _formChange)
     {
-        if (keyManager == null)
+        if (keyManager == null || playerAttack == null)
         {
             return;
         }
@@ -287,6 +294,42 @@ public class PlayerInput : MonoBehaviour
         {
             attack();
             playerAttack.SkillAttack(1);
+        }
+    }
+
+    public void InputChangeHead()
+    {
+        if (keyManager == null)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[5]))
+        {
+            Collider2D collider = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
+                LayerMask.GetMask("ChangeHead"));
+
+            if (collider != null)
+            {
+                skulData.GetHead(transform, collider.GetComponent<ChangeHead>());
+                Destroy(collider.gameObject);
+            }
+        }
+    }
+
+    public void SwitchSkul()
+    {
+        if (keyManager == null)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[12]))
+        {
+            if (!skulData.Skul.SkulIndexB.Equals(0))
+            {
+                skulData.SwitchSkul();
+            }
         }
     }
 }
