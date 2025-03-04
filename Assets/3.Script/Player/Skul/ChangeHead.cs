@@ -5,18 +5,21 @@ using UnityEngine;
 public class ChangeHead : MonoBehaviour
 {
     private Rigidbody2D rigid;
+    private SpriteRenderer spriteRen;
 
     [Header("¸Ó¸®")]
     [SerializeField] private int index;
     public int Index { get { return index; } set { index = value; } }
     [SerializeField] private int hasSkillCount;
     public int HasSkillCount { get { return hasSkillCount; } set { hasSkillCount = value; } }
-    private int[] hasSkillNumber = new int[2];
+    [SerializeField] private int[] hasSkillNumber = new int[2];
     public int[] HasSkillNumber { get { return hasSkillNumber; } set { hasSkillNumber = value; } }
+    [SerializeField] private Sprite[] headSprites;
 
-    private void Awake()
+    private void Start()
     {
         TryGetComponent(out rigid);
+        TryGetComponent(out spriteRen);
 
         if (index.Equals(1))
         {
@@ -39,6 +42,8 @@ public class ChangeHead : MonoBehaviour
                 }
             }
         }
+
+        spriteRen.sprite = headSprites[index - 1];
     }
 
     public void DropHead()

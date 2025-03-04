@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         input.InputFootholdFall();
         input.InputAttack(ref formChange);
         input.InputChangeHead();
-        input.SwitchSkul();
+        input.InputSwitchSkul();
         anim.PlayerAnim();
     }
 
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(knockbackCoroutine(_knockback));
         moveDir.enabled = false;
 
-        playerStatus.PlayingGameStatus.curHp -= _damage;
+        playerStatus.PlayingGameStatus.curHp -= (int)(_damage * playerStatus.PlayingGameStatus.receivedDamage);
         StopCoroutine("hitColorChange");
         StartCoroutine("hitColorChange");
 

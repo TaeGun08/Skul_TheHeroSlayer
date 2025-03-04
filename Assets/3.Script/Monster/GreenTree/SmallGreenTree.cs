@@ -13,6 +13,7 @@ public class SmallGreenTree : Monster
     private float randomMoveTime;
     private float randomMoveTimer;
     private float attackDelay;
+    private bool isAttacking;
 
     private void Start()
     {
@@ -38,6 +39,11 @@ public class SmallGreenTree : Monster
     private void Update()
     {
         playerAnim();
+
+        if (isAttacking)
+        {
+            state.SetStateEnum(StateEnum.Attack, gravity.IsGround);
+        }
     }
 
     private void smallTreeMove()
@@ -146,6 +152,8 @@ public class SmallGreenTree : Monster
         yield return new WaitForSeconds(1f);
         isAttack = false;
         attackDelay = 10f;
+        isAttacking = false;
+        yield return new WaitForSeconds(1f);
         state.SetStateEnum(StateEnum.Idle, true);
         yield return null;
     }
@@ -163,17 +171,22 @@ public class SmallGreenTree : Monster
         {
             playerCheck = true;
 
-            float distance = Vector2.Distance(_collider.transform.position, transform.position);
+            Vector2 myPos = transform.position;
+            Vector2 targetPos = _collider.transform.position;
+            myPos.y = 0f;
+            targetPos.y = 0f;
+            float distance = Vector2.Distance(targetPos, myPos);
             Vector2 direction = (_collider.transform.position - transform.position).normalized;
 
             attackDelay -= Time.deltaTime;
-            if (attackDelay <= 0 && !state.StateEnum.Equals(StateEnum.Attack))
+            if (attackDelay <= 0 && !state.StateEnum.Equals(StateEnum.Attack) && !isAttacking)
             {
                 rigid.velocity = Vector2.zero;
                 moveDir.MoveOff = true;
                 anim.SetBool("isWalk", false);
                 StartCoroutine(attackCoroutine(_collider.gameObject.GetComponent<PlayerController>()));
                 state.SetStateEnum(StateEnum.Attack, gravity.IsGround);
+                isAttacking = true;
             }
 
             if (!state.StateEnum.Equals(StateEnum.Attack))

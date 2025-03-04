@@ -83,11 +83,12 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        if (state.StateEnum.Equals(StateEnum.Dash) && dashCoolTimer <= 0.22f 
+        if ((state.StateEnum.Equals(StateEnum.Dash) && dashCoolTimer <= 0.22f) 
             || state.StateEnum.Equals(StateEnum.Attack)
             || state.StateEnum.Equals(StateEnum.SkillAttack)
             || state.StateEnum.Equals(StateEnum.JumpAttack)
-            || state.StateEnum.Equals(StateEnum.SwitchAttack))
+            || state.StateEnum.Equals(StateEnum.SwitchAttack)
+            || playerAttack.IsSwitchAttack)
         {
             return;
         }
@@ -156,6 +157,12 @@ public class PlayerInput : MonoBehaviour
             && _maxJumpCount > jumpCount
             && !playerAttack.IsJumpAttack)
         {
+            if (jumpCount > 0)
+            {
+                playerEffect.Jump.transform.position = boxColl.bounds.min;
+                playerEffect.Jump.transform.position = new Vector3(transform.position.x, boxColl.bounds.min.y, 0f);
+                playerEffect.Jump.gameObject.SetActive(true);
+            }
             state.SetStateEnum(StateEnum.Jump, gravity.IsGround);
             gravity.IsGround = false;
             gravity.enabled = false;
@@ -199,6 +206,11 @@ public class PlayerInput : MonoBehaviour
             && dashCount < _maxDashCount
                 && dashCoolTimer < 0.3f)
         {
+            playerEffect.Dash[dashCount].transform.position = transform.position;
+            playerEffect.Dash[dashCount].transform.position = boxColl.bounds.min;
+            playerEffect.Dash[dashCount].transform.position -= new Vector3(transform.localScale.x * 0.5f, 0f, 0f);
+            playerEffect.Dash[dashCount].Scale = transform.localScale;
+            playerEffect.Dash[dashCount].gameObject.SetActive(true);
             dashTime = _dashTime;
             playerAttack.EndAttack();
             playerAttack.IsAttack = false;
@@ -256,7 +268,7 @@ public class PlayerInput : MonoBehaviour
 
     public void InputAttack(ref int _formChange)
     {
-        if (keyManager == null || playerAttack == null)
+        if (playerAttack == null)
         {
             return;
         }
@@ -264,6 +276,12 @@ public class PlayerInput : MonoBehaviour
         playerAttack.ResetAttack(_formChange);
 
         playerAttack.ResetSkillAttack();
+
+        if (keyManager == null || state.StateEnum.Equals(StateEnum.SwitchAttack)
+            || state.StateEnum.Equals(StateEnum.Dash))
+        {
+            return;
+        }
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[6]))
         {
@@ -312,12 +330,11 @@ public class PlayerInput : MonoBehaviour
             if (collider != null)
             {
                 skulData.GetHead(transform, collider.GetComponent<ChangeHead>());
-                Destroy(collider.gameObject);
             }
         }
     }
 
-    public void SwitchSkul()
+    public void InputSwitchSkul()
     {
         if (keyManager == null)
         {
@@ -326,9 +343,30 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[12]))
         {
-            if (!skulData.Skul.SkulIndexB.Equals(0))
+            if (!skulData.Skul.SkulIndexB.Equals(0) && !playerAttack.IsSwitchAttack)
             {
+                StopCoroutine("jumpingCoroutine");
+                StopCoroutine("dashingCoroutine");
                 skulData.SwitchSkul();
+            }
+        }
+    }
+
+    public void InputGetItem()
+    {
+        if (keyManager == null)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(keyManager.Key.KeyCodes[5]))
+        {
+            Collider2D collider = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
+                LayerMask.GetMask("Item"));
+
+            if (collider != null)
+            {
+
             }
         }
     }

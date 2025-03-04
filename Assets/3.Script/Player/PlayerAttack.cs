@@ -13,6 +13,7 @@ public abstract class PlayerAttack : MonoBehaviour
     protected Rigidbody2D rigid;
     protected Gravity gravity;
     protected State state;
+    protected BoxCollider2D boxColl;
 
     [Header("공격설정")]
     [SerializeField] protected int maxAttackCount;
@@ -46,8 +47,11 @@ public abstract class PlayerAttack : MonoBehaviour
     [SerializeField] protected int hasSkillCount;
     public int HasSkillCount { get { return hasSkillCount; } set { hasSkillCount = value; } }
 
-    protected int[] hasSkillNumber = new int[2];
+    [SerializeField] protected int[] hasSkillNumber = new int[2];
     public int[] HasSkillNumber { get { return hasSkillNumber; } set { hasSkillNumber = value; } }
+
+    [Header("히트 이펙트")]
+    [SerializeField] protected VFX[] vfx;
 
     protected virtual void Awake()
     {
@@ -56,6 +60,7 @@ public abstract class PlayerAttack : MonoBehaviour
         TryGetComponent(out rigid);
         TryGetComponent(out gravity);
         TryGetComponent(out state);
+        TryGetComponent(out boxColl);
     }
 
     protected virtual void Start()

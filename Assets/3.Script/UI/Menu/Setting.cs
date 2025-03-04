@@ -21,6 +21,7 @@ public class SettingData
 public class Setting : InputMoveUI
 {
     private SettingData settingData = new SettingData();
+    public SettingData SettingData { get { return settingData; } set { settingData = value; } }
 
     [Header("¼³Á¤")]
     [SerializeField] private Button[] leftButtons;
@@ -90,7 +91,7 @@ public class Setting : InputMoveUI
             texts[0].color = changeColor;
             gameObject.SetActive(false);
             choice();
-            setSetting();
+            SetSetting();
         }
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[0]))
@@ -158,11 +159,14 @@ public class Setting : InputMoveUI
             case 6:
                 if (settingData.rookieOn)
                 {
-                    settingData.rookieOn = false;
+                    SettingData.rookieOn = false;
+                    gameManager.SkulData.GetComponent<PlayerStatus>().Status.receivedDamage += 0.5f;
+                    gameManager.SkulData.GetComponent<PlayerStatus>().PlayingGameStatus.receivedDamage += 0.5f;
+                    SetSetting();
                 }
                 else
                 {
-                    settingData.rookieOn = true;
+                    opneUI[1].SetActive(true);
                 }
                 break;
         }
@@ -225,11 +229,14 @@ public class Setting : InputMoveUI
             case 6:
                 if (settingData.rookieOn)
                 {
-                    settingData.rookieOn = false;
+                    SettingData.rookieOn = false;
+                    gameManager.SkulData.GetComponent<PlayerStatus>().Status.receivedDamage += 0.5f;
+                    gameManager.SkulData.GetComponent<PlayerStatus>().PlayingGameStatus.receivedDamage += 0.5f;
+                    SetSetting();
                 }
                 else
                 {
-                    settingData.rookieOn = true;
+                    opneUI[1].SetActive(true);
                 }
                 break;
         }
@@ -357,12 +364,26 @@ public class Setting : InputMoveUI
                 gameObject.SetActive(false);
                 texts[0].color = changeColor;
                 choice();
-                setSetting();
+                SetSetting();
                 break;
         }
     }
 
-    private void setSetting()
+    public void RookieOn()
+    {
+        settingData.rookieOn = true;
+        if (settingData.rookieOn)
+        {
+            setTexts[2].text = "ÄÑÁü";
+        }
+        else
+        {
+            setTexts[2].text = "²¨Áü";
+        }
+        SetSetting();
+    }
+
+    public void SetSetting()
     {
         Screen.SetResolution(settingData.width, settingData.height, settingData.fullScreen);
         resolution.SetAspect();
@@ -380,7 +401,7 @@ public class Setting : InputMoveUI
         {
             sliders[i].value = 0.5f;
         }
-        setSetting();
+        SetSetting();
     }
 
     protected override void buttonsEvent()
@@ -395,7 +416,7 @@ public class Setting : InputMoveUI
             gameObject.SetActive(false);
             texts[0].color = changeColor;
             choice();
-            setSetting();
+            SetSetting();
         });
 
         leftButtons[2].onClick.AddListener(() =>

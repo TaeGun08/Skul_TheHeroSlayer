@@ -12,9 +12,11 @@ public class LittleBone_Head : MonoBehaviour
 
     [Header("리틀본 머리")]
     [SerializeField] private float moveTime;
+    [SerializeField] private VFX hit;
     private float moveTimer;
     private bool timerOn;
-    private float maintenanceTimer;
+    private int damage;
+    public int Damage { set { damage = value; } }
 
     private void Awake()
     {
@@ -33,7 +35,6 @@ public class LittleBone_Head : MonoBehaviour
         timerOn = true;
         moveDir.MoveOff = false;
         moveRotate.Speed = 20f;
-        maintenanceTimer = 0f;
     }
 
     private void Update()
@@ -43,25 +44,34 @@ public class LittleBone_Head : MonoBehaviour
             moveTimer -= Time.deltaTime;
             if (moveTimer <= 0f)
             {
-                moveTimer = 0f;
-                rigid.gravityScale = 1f;
-                rigid.velocity = Vector2.zero;
-                moveDir.MoveOff = true;
-                moveRotate.Speed = 0f;
-                timerOn = false;
-            }
-        }
-        else
-        {
-            maintenanceTimer += Time.deltaTime;
-            if (maintenanceTimer >= 15f)
-            {
-                gameObject.SetActive(false);
-                maintenanceTimer = 0f;
+                moveStop();
             }
         }
 
         headCollCheck();
+    }
+
+    private void moveStop()
+    {
+        StopCoroutine("hitHeadCoroutine");
+        StartCoroutine("hitHeadCoroutine");
+        moveTimer = 0f;
+        rigid.gravityScale = 1f;
+        moveDir.MoveOff = true;
+        rigid.velocity = Vector2.zero;
+        rigid.velocity = new Vector2(transform.localScale.x * -1f, 3f);
+        moveRotate.Speed = 5f * transform.localScale.x;
+        timerOn = false;
+        Vector2 scale = transform.localScale;
+        scale.x *= -1f;
+        Instantiate(hit, transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
+    }
+
+    private IEnumerator hitHeadCoroutine()
+    {
+        yield return new WaitForSeconds(3f);
+        rigid.velocity = Vector2.zero;
+        moveRotate.Speed = 0f;
     }
 
     private void onCollision(Collider2D[] collider)
@@ -75,16 +85,17 @@ public class LittleBone_Head : MonoBehaviour
         {
             if((coll.gameObject.layer.Equals(LayerMask.NameToLayer("Monster"))
                 || coll.gameObject.layer.Equals(LayerMask.NameToLayer("Ground"))
-                || coll.gameObject.layer.Equals(LayerMask.NameToLayer("Footboard"))
                 || coll.gameObject.layer.Equals(LayerMask.NameToLayer("Wall"))) 
                 && !moveDir.MoveOff)
             {
-                moveTimer = 0f;
-                rigid.gravityScale = 1f;
-                moveDir.MoveOff = true;
-                rigid.velocity = Vector2.zero;
-                moveRotate.Speed = 0f;
-                timerOn = false;
+                Monster monster = coll.GetComponent<Monster>();
+                if (monster != null)
+                {
+                    monster.Hit(damage, new Vector2(transform.localScale.x, 1f));
+
+                }
+
+                moveStop();
             }
         }
     }

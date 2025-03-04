@@ -21,7 +21,7 @@ public class Resolution : MonoBehaviour
 
     public void SetAspect()
     {
-        float curResolution = (float)Screen.width / (float)Screen.height;
+        float curResolution = (float)Screen.width / Screen.height;
 
         Rect viewportRect = cam.rect;
 

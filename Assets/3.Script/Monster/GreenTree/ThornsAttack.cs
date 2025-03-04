@@ -27,7 +27,7 @@ public class ThornsAttack : MonoBehaviour
 
     private void Update()
     {
-        coll = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f, 
+        coll = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
             LayerMask.GetMask("Player"));
         timer += Time.deltaTime;
         if (timer >= 3f && !isAttack)
@@ -39,13 +39,25 @@ public class ThornsAttack : MonoBehaviour
 
     private void LateUpdate()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 30f, LayerMask.GetMask("Ground"));
-        if (hit.collider != null)
+        RaycastHit2D hitA = Physics2D.Raycast(transform.position, Vector2.down, 30f, LayerMask.GetMask("Footboard"));
+        if (hitA.collider != null)
         {
-            if (hit.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+            if (hitA.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Footboard")))
             {
                 Vector2 pos = transform.position;
-                pos.y = hit.collider.bounds.max.y + 0.1f;
+                pos.y = hitA.collider.bounds.max.y + 0.1f;
+                transform.position = pos;
+                return;
+            }
+        }
+
+        RaycastHit2D hitB = Physics2D.Raycast(transform.position, Vector2.down, 30f, LayerMask.GetMask("Ground"));
+        if (hitB.collider != null)
+        {
+            if (hitB.collider.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+            {
+                Vector2 pos = transform.position;
+                pos.y = hitB.collider.bounds.max.y + 0.1f;
                 transform.position = pos;
             }
         }

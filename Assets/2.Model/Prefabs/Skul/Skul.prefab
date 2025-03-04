@@ -50,7 +50,11 @@ MonoBehaviour:
   skuls:
   - {fileID: 1734914054686876365, guid: c343708f59791bd4dbc4b59605b568a1, type: 3}
   - {fileID: 8069900471504941888, guid: 0ec8aaf8d6c542145b843a100fc3ae24, type: 3}
+  hasSkul:
+  - {fileID: 0}
+  - {fileID: 0}
   changeHead: {fileID: 4643603517538207379, guid: e9c314355a994b8448447a33aa460fdf, type: 3}
+  timer: 0
 --- !u!114 &2219227369249550313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +68,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dashPrefab: {fileID: 4974461952308378308, guid: 71d584aa6a3d5e247b9b1e9b2b88e1fc, type: 3}
+  vfxs:
+  - {fileID: 6769353687118635897, guid: f205ae7a6ab6c204d832864cbc679ba5, type: 3}
+  - {fileID: 1730564601958091539, guid: c63bf3f34e9844348a964117fda79900, type: 3}
 --- !u!114 &-1973577508225589401
 MonoBehaviour:
   m_ObjectHideFlags: 0

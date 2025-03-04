@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class LittleBone_Attack : PlayerAttack
 {
-    private BoxCollider2D boxColl;
-
     [Header("리틀본 기본 공격력")]
     [SerializeField] private int damage;
 
@@ -23,6 +21,15 @@ public class LittleBone_Attack : PlayerAttack
         TryGetComponent(out boxColl);
     }
 
+    private void OnDisable()
+    {
+        if (littleBone_Head_Clone != null)
+        {
+            Destroy(littleBone_Head_Clone.gameObject);
+            littleBone_Head_Clone = null;
+        }
+    }
+
     private void onCollision(Collider2D collider)
     {
         if (collider == null)
@@ -34,6 +41,8 @@ public class LittleBone_Attack : PlayerAttack
         {
             if (littleBone_Head_Clone.MoveDir.MoveOff)
             {
+                anim.SetLayerWeight(0, 1.0f);
+                anim.SetLayerWeight(1, 0f);
                 littleBone_Head_Clone.gameObject.SetActive(false);
                 throwingHead = false;
                 skillACollTimer = 0f;
@@ -48,7 +57,10 @@ public class LittleBone_Attack : PlayerAttack
             if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")))
             {
                 Monster monsterSc = collider.GetComponent<Monster>();
-                monsterSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 1f));
+                monsterSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 0f));
+                Vector2 scale = transform.localScale;
+                scale.x *= -1f;
+                Instantiate(vfx[0], monsterSc.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
             }
         }
     }
@@ -60,7 +72,7 @@ public class LittleBone_Attack : PlayerAttack
         onCollision(collider);
     }
 
-    private IEnumerator head()
+    private IEnumerator headCoroutine()
     {
         yield return new WaitForSeconds(0.2f);
 
@@ -68,6 +80,13 @@ public class LittleBone_Attack : PlayerAttack
         gravity.enabled = true;
         throwingHead = true;
         EndSkillAttack();
+    }
+    private IEnumerator activeFalseHeadCoroutine()
+    {
+        yield return new WaitForSeconds(15f);
+        littleBone_Head_Clone.gameObject.SetActive(false);
+        anim.SetLayerWeight(0, 1.0f);
+        anim.SetLayerWeight(1, 0f);
     }
 
     protected override IEnumerator AttackMoveCoroutine()
@@ -95,36 +114,6 @@ public class LittleBone_Attack : PlayerAttack
         if (!isAttack)
         {
             isJumpAttack = false;
-            return;
-        }
-
-        if (isComboAttack)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(_info).IsName("Attack_01")
-               && anim.GetCurrentAnimatorStateInfo(_info).normalizedTime >= 0.7f)
-            {
-                if (Input.GetKey(keyManager.Key.KeyCodes[2]))
-                {
-                    StopCoroutine("AttackMoveCoroutine");
-                    StartCoroutine("AttackMoveCoroutine");
-                }
-
-                if (Input.GetKey(keyManager.Key.KeyCodes[3]))
-                {
-                    StopCoroutine("AttackMoveCoroutine");
-                    StartCoroutine("AttackMoveCoroutine");
-                }
-
-                anim.SetBool("isComboAttack", isComboAttack);
-            }
-        }
-
-        if ((anim.GetCurrentAnimatorStateInfo(_info).IsName("Attack_01")
-          || anim.GetCurrentAnimatorStateInfo(_info).IsName("Attack_02")
-          || anim.GetCurrentAnimatorStateInfo(_info).IsName("JumpAttack"))
-          && anim.GetCurrentAnimatorStateInfo(_info).normalizedTime >= 1f)
-        {
-            EndAttack();
         }
     }
 
@@ -221,10 +210,16 @@ public class LittleBone_Attack : PlayerAttack
                     dir = littleBone_Head_Clone.MoveDir.MoveDir.x * -1f;
                 }
 
+                anim.SetLayerWeight(0, 0f);
+                anim.SetLayerWeight(1, 1.0f);
+
                 littleBone_Head_Clone.MoveDir.MoveDir = new Vector2(dir, 0f);
                 littleBone_Head_Clone.gameObject.SetActive(false);
-                StopCoroutine("head");
-                StartCoroutine("head");
+                littleBone_Head_Clone.Damage = (int)(damage * 1.5f)  * (playerStatus.PlayingGameStatus.physicalAttackPower / 100);
+                StopCoroutine("headCoroutine");
+                StartCoroutine("headCoroutine");
+                StopCoroutine("activeFalseHeadCoroutine");
+                StartCoroutine("activeFalseHeadCoroutine");
             }
             else if (_skillnumber.Equals(1) && skillBCollTimer <= 0f)
             {
@@ -243,6 +238,9 @@ public class LittleBone_Attack : PlayerAttack
                     gravity.Velocity = 0f;
                     state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
 
+                    anim.SetLayerWeight(0, 1.0f);
+                    anim.SetLayerWeight(1, 0f);
+
                     skillBCollTimer = skillBCollTime;
                     skillACollTimer = 0f;
                     rigid.velocity = Vector2.zero;
@@ -260,8 +258,8 @@ public class LittleBone_Attack : PlayerAttack
     {
         moveDir.enabled = true;
         isAttack = false;
-        isComboAttack = false;
         anim.SetBool("isAttack", isAttack);
+        anim.SetInteger("AttackCount", attackCount);
         anim.SetBool("isComboAttack", isComboAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
     }
@@ -289,6 +287,8 @@ public class LittleBone_Attack : PlayerAttack
     {
         if (isSwitchAttack)
         {
+            gravity.enabled = true;
+            EndAttack();
             state.SetStateEnum(StateEnum.SwitchAttack, gravity.IsGround);
             anim.SetTrigger("SwitchAttack");
             moveDir.MoveDir = Vector2.zero;
@@ -297,9 +297,10 @@ public class LittleBone_Attack : PlayerAttack
             rigid.velocity = new Vector2(2f * transform.localScale.x, 0f);
             damage = 4;
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         damage = 8;
         moveDir.MoveOff = false;
+        isSwitchAttack = false;
         state.SetStateEnum(StateEnum.Idle, true);
     }
 }

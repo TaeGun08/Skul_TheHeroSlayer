@@ -41,6 +41,13 @@ public class ControllMenu : InputMoveUI
         }
         else
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                changeObj.SetActive(false);
+                count = 0;
+                choice();
+            }
+
             if (Input.GetKeyDown(keyManager.Key.KeyCodes[0]))
             {
                 count--;
@@ -118,6 +125,7 @@ public class ControllMenu : InputMoveUI
         {
             gameObject.SetActive(false);
             count = 0;
+            choice();
         });
     }
 }

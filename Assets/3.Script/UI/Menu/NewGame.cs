@@ -12,14 +12,21 @@ public class NewGame : InputMoveUI
 
     private void LateUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameObject.SetActive(false);
+            count = 0;
+            choice();
+        }
+
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[2]))
         {
-            count--;
+            count = 1;
             choice();
         }
         else if (Input.GetKeyDown(keyManager.Key.KeyCodes[3]))
         {
-            count++;
+            count = 0;
             choice();
         }
 
@@ -48,6 +55,7 @@ public class NewGame : InputMoveUI
         {
             gameObject.SetActive(false);
             count = 0;
+            choice();
         });
 
         buttons[1].onClick.AddListener(() =>

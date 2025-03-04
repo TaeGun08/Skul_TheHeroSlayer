@@ -12,6 +12,11 @@ public class PlayerEffect : MonoBehaviour
     [Header("VFX")]
     [SerializeField] private DashPrefab dashPrefab;
     private List<DashPrefab> dashPool = new List<DashPrefab>();
+    [SerializeField] private VFX[] vfxs;
+    private VFX jump;
+    public VFX Jump { get { return jump; } set { jump = value; } }
+    private VFX[] dash = new VFX[2];
+    public VFX[] Dash { get { return dash; } set { dash = value; } }
 
     private void Awake()
     {
@@ -19,6 +24,16 @@ public class PlayerEffect : MonoBehaviour
         {
             dashPool.Add(Instantiate(dashPrefab, transform));
         }
+
+        jump = Instantiate(vfxs[0], transform);
+        dash[0] = Instantiate(vfxs[1], transform);
+        dash[1] = Instantiate(vfxs[1], transform);
+        jump.Scale = transform.localScale;
+        dash[0].Scale = transform.localScale;
+        dash[1].Scale = transform.localScale;
+        jump.gameObject.SetActive(false);
+        dash[0].gameObject.SetActive(false);
+        dash[1].gameObject.SetActive(false);
     }
 
     private void Start()

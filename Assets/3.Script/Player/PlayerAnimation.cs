@@ -27,6 +27,11 @@ public class PlayerAnimation : MonoBehaviour
 
     private void fallAnim()
     {
+        if (state.StateEnum.Equals(StateEnum.SwitchAttack))
+        {
+            return;
+        }
+
         if (rigid.velocity.y < 0 && !gravity.IsGround)
         {
             fallTime += Time.deltaTime * 2f;

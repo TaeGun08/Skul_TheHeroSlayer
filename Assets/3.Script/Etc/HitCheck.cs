@@ -13,8 +13,7 @@ public class HitCheck : MonoBehaviour
             Destroy(gameObject);
         }
         else if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Ground"))
-            || collision.gameObject.layer.Equals(LayerMask.NameToLayer("Wall"))
-            || collision.gameObject.layer.Equals(LayerMask.NameToLayer("Footboard")))
+            || collision.gameObject.layer.Equals(LayerMask.NameToLayer("Wall")))
         {
             Destroy(gameObject);
         }

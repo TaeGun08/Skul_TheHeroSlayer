@@ -321,6 +321,8 @@ MonoBehaviour:
   skillACollTime: 8
   skillBCollTime: 3
   hasSkillCount: 2
+  vfx:
+  - {fileID: 1288453330592549613, guid: 2681096b662150043a538f52c3193b91, type: 3}
   damage: 8
   littleBone_Head: {fileID: 4847373583819177060, guid: d1bbca8a148df544a9da13668ae4fdaa, type: 3}
   hitBox: {fileID: 8084461689734032877}
@@ -341,10 +343,11 @@ MonoBehaviour:
   jumpForce: 7
   jumpCount: 2
   dashForce: 16
+  dashUpForce: 0
+  dashTime: 0.1
   dashCoolTime: 1
   dashCount: 2
   gravityDash: 0
-  dashTime: 0.1
   formChange: 0
 --- !u!114 &-4963903183160400418
 MonoBehaviour:
@@ -358,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8762d4e2c1891e94abd301aac60ceea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 87b7d7c70f8cdcb4184016f1d0cba1d5, type: 3}
+  icon: {fileID: 21300000, guid: 30c3ad86e680ca545825d2b4384b644a, type: 3}
   skill_Icon:
   - {fileID: 21300000, guid: a9b93bab85105304cbba2b57c9e02a70, type: 3}
   - {fileID: 21300000, guid: b5f1971e55522f04b869086bb051a783, type: 3}

@@ -53,6 +53,6 @@ public class PlayerStateUI : MonoBehaviour
 
     public void SetSwitchTimer(float _timer)
     {
-        switchTimerImage.fillAmount = _timer / 10;
+        switchTimerImage.fillAmount = _timer / 7;
     }
 }

@@ -14,7 +14,8 @@ public class PlayerUI : MonoBehaviour
     private SkulData skulData;
     private PlayerStatus playerStatus;
 
-    private GameObject skul;
+    [SerializeField] private GameObject skul;
+    public GameObject Skul { get { return skul; } set { skul = value; } }
     private PlayerAttack playerAttack;
 
     private void Awake()
