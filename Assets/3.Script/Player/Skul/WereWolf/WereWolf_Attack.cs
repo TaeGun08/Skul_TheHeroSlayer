@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class WereWolf_Attack : PlayerAttack
 {
-    [Header("리틀본 기본 공격력")]
-    [SerializeField] private int damage;
-
     [Header("기본공격 히트박스")]
     [SerializeField] private BoxCollider2D hitBox;
 
@@ -41,60 +38,59 @@ public class WereWolf_Attack : PlayerAttack
         yield return null;
     }
 
-    private void useWereWolfSkill()
+    private void useWereWolfSkill(int _skillNumber)
     {
-        if (skillACollTimer <= 0f)
+        anim.SetFloat("SkillCount", hasSkillNumber[_skillNumber]);
+        useSkillNumber = hasSkillNumber[_skillNumber];
+
+        moveDir.MoveDir = Vector2.zero;
+        rigid.velocity = Vector2.zero;
+        gravity.Velocity = 0f;
+        state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
+        anim.SetBool("isSkillAttack", state.StateEnum.Equals(StateEnum.SkillAttack));
+
+        switch (hasSkillNumber[_skillNumber])
         {
-            isSkillAttack = true;
-            anim.SetBool("isSkillAttack", isSkillAttack);
-            anim.SetInteger("SkillCount", hasSkillNumber[0]);
-            useSkillNumber = hasSkillNumber[0];
-
-            moveDir.MoveDir = Vector2.zero;
-            rigid.velocity = Vector2.zero;
-            gravity.Velocity = 0f;
-            state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
-
-            switch (hasSkillNumber[0])
-            {
-                case 1:
-                    StopCoroutine("skill01Coroutine");
-                    StartCoroutine("skill01Coroutine");
-                    skillACollTimer = 15f;
-                    skillACollTime = 15f;
-                    skill01Count = 2;
-                    skill01On = true;
-                    skill01Timer = 10f;
-                    break;
-                case 2:
-                    skillACollTimer = 15f;
-                    skillACollTime = 15f;
-                    damage = 15;
-                    break;
-                case 3:
-                    skillACollTimer = 20f;
-                    skillACollTime = 20f;
-                    damage = 20;
-                    break;
-                case 4:
-                    StopCoroutine("skill04Coroutine");
-                    StartCoroutine("skill04Coroutine");
-                    skillACollTimer = 20f;
-                    skillACollTime = 20f;
-                    break;
-            }
+            case 1:
+                StopCoroutine("skill01Coroutine");
+                StartCoroutine("skill01Coroutine");
+                skillACoolTimer = 15f;
+                skillACoolTime = 15f;
+                skill01Count = 2;
+                skill01On = true;
+                skill01Timer = 10f;
+                break;
+            case 2:
+                skillACoolTimer = 15f;
+                skillACoolTime = 15f;
+                damage = 15;
+                break;
+            case 3:
+                skillACoolTimer = 20f;
+                skillACoolTime = 20f;
+                damage = 20;
+                break;
+            case 4:
+                StopCoroutine("skill04Coroutine");
+                StartCoroutine("skill04Coroutine");
+                skillACoolTimer = 20f;
+                skillACoolTime = 20f;
+                break;
         }
-        else if (skill01On && skill01Count > 0)
+    }
+
+    private void huntingSkill(int _skillNumber)
+    {
+        if (skill01On && skill01Count > 0)
         {
-            isSkillAttack = true;
-            anim.SetBool("isSkillAttack", isSkillAttack);
-            anim.SetInteger("SkillCount", hasSkillNumber[0]);
-            useSkillNumber = hasSkillNumber[0];
+            anim.SetFloat("SkillCount", hasSkillNumber[_skillNumber]);
+            useSkillNumber = hasSkillNumber[_skillNumber];
 
             moveDir.MoveDir = Vector2.zero;
             rigid.velocity = Vector2.zero;
             gravity.Velocity = 0f;
             state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
+            anim.SetBool("isSkillAttack", state.StateEnum.Equals(StateEnum.SkillAttack));
             StopCoroutine("skill01Coroutine");
             StartCoroutine("skill01Coroutine");
             skill01Count--;
@@ -116,9 +112,8 @@ public class WereWolf_Attack : PlayerAttack
         yield return new WaitForSeconds(0.15f);
         damage = 9;
         moveDir.MoveOff = false;
-        isSkillAttack = false;
         state.SetStateEnum(StateEnum.Idle, true);
-        anim.SetBool("isSkillAttack", isSkillAttack);
+        anim.SetBool("isSkillAttack", state.StateEnum.Equals(StateEnum.SkillAttack));
     }
 
     private IEnumerator skill04Coroutine()
@@ -129,7 +124,7 @@ public class WereWolf_Attack : PlayerAttack
         moveDir.MoveOff = true;
         gravity.enabled = false;
         rigid.velocity = Vector2.zero;
-        rigid.velocity = new Vector2(40f * transform.localScale.x, 0f);
+        rigid.velocity = new Vector2(50f * transform.localScale.x, 0f);
         damage = 40;
         VFX vfxSc = Instantiate(vfx[1], transform.position, Quaternion.identity).GetComponent<VFX>();
         vfxSc.Scale = transform.localScale;
@@ -138,14 +133,14 @@ public class WereWolf_Attack : PlayerAttack
         damage = 9;
         yield return new WaitForSeconds(0.10f);
         moveDir.MoveOff = false;
-        isSkillAttack = false;
         gravity.enabled = true;
         state.SetStateEnum(StateEnum.Idle, true);
-        anim.SetBool("isSkillAttack", isSkillAttack);
+        anim.SetBool("isSkillAttack", state.StateEnum.Equals(StateEnum.SkillAttack));
     }
 
     public void MonsterCollCheck()
     {
+        inventoryManager.UseItemAbility(StateEnum.Attack);
         Collider2D[] monsters = Physics2D.OverlapBoxAll(hitBox.bounds.center, hitBox.bounds.size, 0.0f,
             LayerMask.GetMask("Monster"));
 
@@ -166,20 +161,21 @@ public class WereWolf_Attack : PlayerAttack
         }
     }
 
-    public override void ResetAttack(int _info)
+    public void SwitchMonsterCollCheck()
     {
-        if (!isAttack)
+        Collider2D[] monsters = Physics2D.OverlapBoxAll(skillHitBoxs[0].bounds.center, hitBox.bounds.size, 0.0f,
+           LayerMask.GetMask("Monster"));
+
+        if (!monsters.Length.Equals(0))
         {
-            isJumpAttack = false;
+            onCollisions(monsters);
         }
     }
 
-    public override void Attack(int _info)
+    public override void Attack()
     {
-        if (!isAttack)
+        if (!state.StateEnum.Equals(StateEnum.Attack) && !state.StateEnum.Equals(StateEnum.JumpAttack))
         {
-            isAttack = true;
-
             rigid.velocity = new Vector2(0f, rigid.velocity.y);
 
             state.SetStateEnum(gravity.IsGround == true ? StateEnum.Attack : StateEnum.JumpAttack, gravity.IsGround);
@@ -197,11 +193,17 @@ public class WereWolf_Attack : PlayerAttack
             }
 
             anim.SetInteger("AttackCount", attackCount);
-            anim.SetBool("isAttack", isAttack);
+
+            if (!isComboAttack)
+            {
+                anim.SetTrigger("Attack");
+            }
         }
         else
         {
-            if (attackCount.Equals(0) && anim.GetCurrentAnimatorStateInfo(_info).IsName("Attack_01"))
+            if (attackCount.Equals(0) 
+                && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack_01")
+                && !state.StateEnum.Equals(StateEnum.JumpAttack))
             {
                 attackCount++;
                 isComboAttack = true;
@@ -209,39 +211,46 @@ public class WereWolf_Attack : PlayerAttack
         }
     }
 
-    public override void ResetSkillAttack()
+    public override void ResetAttack()
     {
-        if (skillACollTimer > 0)
+        if (skillACoolTimer > 0)
         {
-            skillACollTimer -= Time.deltaTime;
+            skillACoolTimer -= Time.deltaTime;
+        }
+
+        if (skillBCoolTimer > 0)
+        {
+            skillBCoolTimer -= Time.deltaTime;
         }
 
         if (skill01Timer > 0 && skill01On)
         {
             skill01Timer -= Time.deltaTime;
         }
-        else
-        {
-            skill01On = false;
-        }
-
-        if (skillBCollTimer > 0)
-        {
-            skillBCollTimer -= Time.deltaTime;
-        }
     }
 
     public override void SkillAttack(int _skillnumber)
     {
-        if (!isSkillAttack && !state.StateEnum.Equals(StateEnum.SwitchAttack))
+        if (!state.StateEnum.Equals(StateEnum.SwitchAttack))
         {
             if (_skillnumber.Equals(0))
             {
-                useWereWolfSkill();
+                if (skillACoolTimer <= 0f)
+                {
+                    useWereWolfSkill(0);
+                }
+                else
+                {
+                    huntingSkill(0);
+                }
             }
-            else if (_skillnumber.Equals(1) && skillBCollTimer <= 0f && !hasSkillNumber[1].Equals(0))
+            else if (_skillnumber.Equals(1) && !hasSkillNumber[1].Equals(0))
             {
-                useWereWolfSkill();
+                if (skillBCoolTimer <= 0f)
+                {
+                    useWereWolfSkill(1);
+                }
+                huntingSkill(1);
             }
         }
     }
@@ -249,8 +258,6 @@ public class WereWolf_Attack : PlayerAttack
     public override void ComboAttack()
     {
         moveDir.enabled = true;
-        isAttack = false;
-        anim.SetBool("isAttack", isAttack);
         anim.SetInteger("AttackCount", attackCount);
         anim.SetBool("isComboAttack", isComboAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
@@ -259,10 +266,8 @@ public class WereWolf_Attack : PlayerAttack
     public override void EndAttack()
     {
         moveDir.enabled = true;
-        isAttack = false;
         attackCount = 0;
         isComboAttack = false;
-        anim.SetBool("isAttack", isAttack);
         anim.SetInteger("AttackCount", attackCount);
         anim.SetBool("isComboAttack", isComboAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
@@ -272,9 +277,8 @@ public class WereWolf_Attack : PlayerAttack
     {
         useSkillNumber = 0;
         damage = 9;
-        isSkillAttack = false;
-        anim.SetBool("isSkillAttack", isSkillAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
+        anim.SetBool("isSkillAttack", false);
     }
 
     public override IEnumerator SwitchAttackCoroutine()
@@ -288,7 +292,7 @@ public class WereWolf_Attack : PlayerAttack
             moveDir.MoveDir = Vector2.zero;
             moveDir.MoveOff = true;
             rigid.velocity = Vector2.zero;
-            rigid.velocity = new Vector2(40f * transform.localScale.x, 0f);
+            rigid.velocity = new Vector2(50f * transform.localScale.x, 0f);
             damage = 30;
             VFX vfxSc = Instantiate(vfx[1], transform.position, Quaternion.identity).GetComponent<VFX>();
             vfxSc.Scale = transform.localScale;

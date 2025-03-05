@@ -184,6 +184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e5b28e11b1d56345b9fad8e94a434e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
+  playerOrMonsterHit: 0
+  disposable: 1
 --- !u!114 &1143365069623580909
 MonoBehaviour:
   m_ObjectHideFlags: 0

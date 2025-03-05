@@ -12,8 +12,11 @@ GameObject:
   - component: {fileID: 7086234487751310277}
   - component: {fileID: 9152387982889386486}
   - component: {fileID: 6793450273454072025}
+  - component: {fileID: -8509118402736061227}
+  - component: {fileID: -7964289834903343573}
+  - component: {fileID: 6767291822962425309}
   m_Layer: 0
-  m_Name: HiddenDagger_Projectile
+  m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,3 +161,48 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5263158, y: 0.18421052}
   m_EdgeRadius: 0
+--- !u!114 &-8509118402736061227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2926919420858217069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a13fe1bc0907e469d2e616c3b3ba44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveDir: {x: 6, y: 0}
+  moveOff: 0
+--- !u!114 &-7964289834903343573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2926919420858217069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f26d2517ef17e4e9a28397278fec0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 1
+  falseOrDetroy: 0
+--- !u!114 &6767291822962425309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2926919420858217069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5b28e11b1d56345b9fad8e94a434e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0.7
+  playerOrMonsterHit: 1
+  disposable: 0
+  poolOn: 1
+  vfx: {fileID: 1288453330592549613, guid: 2681096b662150043a538f52c3193b91, type: 3}

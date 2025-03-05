@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ThiefsBlackIronDaggers : Item
 {
-    public override void ItemAbility(PlayerStatus _playerStatus, GameObject _skul)
+    public override void ItemAbility()
     {
-        throw new System.NotImplementedException();
+
     }
 }

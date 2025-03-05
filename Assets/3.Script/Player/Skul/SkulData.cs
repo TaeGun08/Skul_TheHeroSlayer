@@ -31,6 +31,8 @@ public class SkulData : MonoBehaviour
     public Skul Skul => skul;
     [SerializeField] private float timer;
     public float Timer => timer;
+    private float skillACool;
+    private float skillBCool;
 
     private void Awake()
     {
@@ -83,6 +85,26 @@ public class SkulData : MonoBehaviour
         yield return null;
     }
 
+    private IEnumerator activeFalseSkillATimer()
+    {
+        WaitForSeconds wfs = new WaitForSeconds(0.01f);
+        while (skillACool > 0)
+        {
+            skillACool -= Time.deltaTime;
+            yield return wfs;
+        }
+    }
+
+    private IEnumerator activeFalseSkillBTimer()
+    {
+        WaitForSeconds wfs = new WaitForSeconds(0.01f);
+        while (skillBCool > 0)
+        {
+            skillBCool -= Time.deltaTime;
+            yield return wfs;
+        }
+    }
+
     public void GetHead(Transform _trs, ChangeHead _changeHead)
     {
         SkulChangeUI skulChangeUIA = null;
@@ -107,9 +129,13 @@ public class SkulData : MonoBehaviour
             skul.SkillNumberB[1] = skill2;
             skul.SkillNumberA[1] = _changeHead.HasSkillNumber[1];
 
-            PlayerAttack playerAttackSc = hasSkul[0].GetComponent<PlayerAttack>();
-            playerAttackSc.HasSkillNumber[0] = skul.SkillNumberA[0];
-            playerAttackSc.HasSkillNumber[1] = skul.SkillNumberA[1];
+            PlayerAttack playerAttackScA = hasSkul[0].GetComponent<PlayerAttack>();
+            playerAttackScA.HasSkillNumber[0] = skul.SkillNumberA[0];
+            playerAttackScA.HasSkillNumber[1] = skul.SkillNumberA[1];
+
+            PlayerAttack playerAttackScB = hasSkul[1].GetComponent<PlayerAttack>();
+            skillACool = playerAttackScB.SkillACoolTimer;
+            skillBCool = playerAttackScB.SkillBCoolTimer;
 
             hasSkul[1].SetActive(false);
         }
@@ -121,9 +147,13 @@ public class SkulData : MonoBehaviour
             changeHeadSc.HasSkillNumber[0] = skul.SkillNumberA[0];
             changeHeadSc.HasSkillNumber[1] = skul.SkillNumberA[1];
 
-            PlayerAttack playerAttackSc = hasSkul[0].GetComponent<PlayerAttack>();
-            playerAttackSc.HasSkillNumber[0] = skul.SkillNumberA[0];
-            playerAttackSc.HasSkillNumber[1] = skul.SkillNumberA[1];
+            PlayerAttack playerAttackScA = hasSkul[0].GetComponent<PlayerAttack>();
+            playerAttackScA.HasSkillNumber[0] = skul.SkillNumberA[0];
+            playerAttackScA.HasSkillNumber[1] = skul.SkillNumberA[1];
+
+            PlayerAttack playerAttackScB = hasSkul[1].GetComponent<PlayerAttack>();
+            skillACool = playerAttackScB.SkillACoolTimer;
+            skillBCool = playerAttackScB.SkillBCoolTimer;
 
             Vector2 scale = hasSkul[0].transform.localScale;
             Destroy(hasSkul[0]);
@@ -159,6 +189,11 @@ public class SkulData : MonoBehaviour
 
         playerUI.Skul = null;
 
+        StopCoroutine("activeFalseSkillATimer");
+        StartCoroutine("activeFalseSkillATimer");
+        StopCoroutine("activeFalseSkillBTimer");
+        StartCoroutine("activeFalseSkillBTimer");
+
         Destroy(_changeHead.gameObject);
     }
 
@@ -189,12 +224,18 @@ public class SkulData : MonoBehaviour
             hasSkul[0].transform.position = hasSkul[1].transform.position;
             hasSkul[0].transform.localScale = hasSkul[1].transform.localScale;
 
-            PlayerAttack playerAttackSc = hasSkul[0].GetComponent<PlayerAttack>();
-            playerAttackSc.IsSwitchAttack = true;
-            StartCoroutine(playerAttackSc.SwitchAttackCoroutine());
+            PlayerAttack playerAttackScA = hasSkul[0].GetComponent<PlayerAttack>();
+            playerAttackScA.IsSwitchAttack = true;
+            StartCoroutine(playerAttackScA.SwitchAttackCoroutine());
             playerEffect.SpriteRen = null;
             timer = 7f;
             gameManager.OnSkul = hasSkul[0];
+            playerAttackScA.SkillACoolTimer = skillACool;
+            playerAttackScA.SkillBCoolTimer = skillBCool;
+
+            PlayerAttack playerAttackScB = hasSkul[1].GetComponent<PlayerAttack>();
+            skillACool = playerAttackScB.SkillACoolTimer;
+            skillBCool = playerAttackScB.SkillBCoolTimer;
 
             hasSkul[0].GetComponent<SkulChangeUI>().TryGetComponent(out skulChangeUIA);
             hasSkul[1].GetComponent<SkulChangeUI>().TryGetComponent(out skulChangeUIB);
@@ -217,6 +258,10 @@ public class SkulData : MonoBehaviour
 
             playerUI.Skul = null;
 
+            StopCoroutine("activeFalseSkillATimer");
+            StartCoroutine("activeFalseSkillATimer");
+            StopCoroutine("activeFalseSkillBTimer");
+            StartCoroutine("activeFalseSkillBTimer");
             StartCoroutine(switchTimer());
         }
     }

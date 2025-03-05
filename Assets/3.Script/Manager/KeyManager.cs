@@ -43,8 +43,7 @@ public class KeyManager : MonoBehaviour
             PlayerPrefs.SetString("SaveKeyCode", JsonConvert.SerializeObject(keyDictionary));
         }
     }
-
-    private void OnEnable()
+    private void Start()
     {
         if (!GameManager.Instance.ManagersDictionary.ContainsKey("KeyManager"))
         {

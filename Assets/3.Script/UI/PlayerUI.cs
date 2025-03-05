@@ -58,8 +58,8 @@ public class PlayerUI : MonoBehaviour
 
         if (playerAttack != null)
         {
-            playerStateUI.SetCoolTime(0, playerAttack.SkillACollTimer, playerAttack.SkillACollTime);
-            playerStateUI.SetCoolTime(1, playerAttack.SkillBCollTimer, playerAttack.SkillBCollTime);
+            playerStateUI.SetCoolTime(0, playerAttack.SkillACoolTimer, playerAttack.SkillACoolTime);
+            playerStateUI.SetCoolTime(1, playerAttack.SkillBCoolTimer, playerAttack.SkillBCoolTime);
             playerStateUI.SetKeyText(0, keyManager.Key.KeyCodes[9]);
             playerStateUI.SetKeyText(1, keyManager.Key.KeyCodes[10]);
             playerStateUI.SetHp(playerStatus.PlayingGameStatus.curHp, playerStatus.PlayingGameStatus.hp);

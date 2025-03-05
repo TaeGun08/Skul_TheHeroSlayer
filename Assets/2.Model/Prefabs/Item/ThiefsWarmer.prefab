@@ -171,7 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f214b62793f38429d8c72b9a076115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemTier: 0
-  itmeIcon: {fileID: 0}
-  itmeImage: {fileID: 0}
+  index: 1
+  itemTier: 2
+  itmeIcon: {fileID: 21300000, guid: ee1e4ef8b8c785d4496c5304e908bbdf, type: 3}
+  itmeImage: {fileID: 21300000, guid: 10bc0ac52c483d64c81bb4f3b2618429, type: 3}
   shuriken: {fileID: 6303620085597174536, guid: 8278e7211ad2cd943ae73f220ef428e7, type: 3}

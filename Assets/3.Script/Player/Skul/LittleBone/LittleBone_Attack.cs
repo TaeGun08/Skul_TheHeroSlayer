@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class LittleBone_Attack : PlayerAttack
 {
-    [Header("리틀본 기본 공격력")]
-    [SerializeField] private int damage;
-
     [Header("리틀본 어택")]
     [SerializeField] private LittleBone_Head littleBone_Head;
     private LittleBone_Head littleBone_Head_Clone;
@@ -45,7 +42,7 @@ public class LittleBone_Attack : PlayerAttack
                 anim.SetLayerWeight(1, 0f);
                 littleBone_Head_Clone.gameObject.SetActive(false);
                 throwingHead = false;
-                skillACollTimer = 0f;
+                skillACoolTimer = 0f;
             }
         }
     }
@@ -81,6 +78,7 @@ public class LittleBone_Attack : PlayerAttack
         throwingHead = true;
         EndSkillAttack();
     }
+
     private IEnumerator activeFalseHeadCoroutine()
     {
         yield return new WaitForSeconds(15f);
@@ -100,6 +98,8 @@ public class LittleBone_Attack : PlayerAttack
 
     public void MonsterCollCheck()
     {
+        inventoryManager.UseItemAbility(StateEnum.Attack);
+
         Collider2D[] monsters = Physics2D.OverlapBoxAll(hitBox.bounds.center, hitBox.bounds.size, 0.0f,
             LayerMask.GetMask("Monster"));
 
@@ -109,20 +109,21 @@ public class LittleBone_Attack : PlayerAttack
         }
     }
 
-    public override void ResetAttack(int _info)
+    public void SwitchMonsterCollCheck()
     {
-        if (!isAttack)
+        Collider2D[] monsters = Physics2D.OverlapBoxAll(hitBox.bounds.center, hitBox.bounds.size, 0.0f,
+           LayerMask.GetMask("Monster"));
+
+        if (!monsters.Length.Equals(0))
         {
-            isJumpAttack = false;
+            onCollisions(monsters);
         }
     }
 
-    public override void Attack(int _info)
+    public override void Attack()
     {
-        if (!isAttack)
+        if (!state.StateEnum.Equals(StateEnum.Attack) && !state.StateEnum.Equals(StateEnum.JumpAttack))
         {
-            isAttack = true;
-
             rigid.velocity = new Vector2(0f, rigid.velocity.y);
 
             state.SetStateEnum(gravity.IsGround == true ? StateEnum.Attack : StateEnum.JumpAttack, gravity.IsGround);
@@ -140,20 +141,25 @@ public class LittleBone_Attack : PlayerAttack
             }
 
             anim.SetInteger("AttackCount", attackCount);
-            anim.SetBool("isAttack", isAttack);
+
+            if (!isComboAttack)
+            {
+                anim.SetTrigger("Attack");
+            }
         }
         else
         {
-            if (attackCount.Equals(0) && anim.GetCurrentAnimatorStateInfo(_info).IsName("Attack_01"))
+            if (attackCount.Equals(0)
+                && anim.GetCurrentAnimatorStateInfo(0).IsName("Attack_01")
+                && !state.StateEnum.Equals(StateEnum.JumpAttack))
             {
                 attackCount++;
                 isComboAttack = true;
-                anim.SetInteger("AttackCount", attackCount);
             }
         }
     }
 
-    public override void ResetSkillAttack()
+    public override void ResetAttack()
     {
         if (littleBone_Head_Clone != null)
         {
@@ -163,14 +169,14 @@ public class LittleBone_Attack : PlayerAttack
             }
         }
 
-        if (skillACollTimer > 0)
+        if (skillACoolTimer > 0)
         {
-            skillACollTimer -= Time.deltaTime;
+            skillACoolTimer -= Time.deltaTime;
         }
 
-        if (skillBCollTimer > 0)
+        if (skillBCoolTimer > 0)
         {
-            skillBCollTimer -= Time.deltaTime;
+            skillBCoolTimer -= Time.deltaTime;
         }
 
         headCollCheck();
@@ -178,20 +184,18 @@ public class LittleBone_Attack : PlayerAttack
 
     public override void SkillAttack(int _skillnumber)
     {
-        if (!isSkillAttack && !state.StateEnum.Equals(StateEnum.SwitchAttack))
+        if (!state.StateEnum.Equals(StateEnum.SwitchAttack))
         {
-            if (_skillnumber.Equals(0) && skillACollTimer <= 0f)
+            if (_skillnumber.Equals(0) && skillACoolTimer <= 0f)
             {
-                isSkillAttack = true;
-
                 moveDir.MoveDir = Vector2.zero;
                 rigid.velocity = Vector2.zero;
                 gravity.enabled = false;
                 gravity.Velocity = 0f;
                 state.SetStateEnum(StateEnum.SkillAttack, gravity.IsGround);
-                skillACollTimer = skillACollTime;
+                skillACoolTimer = skillACoolTime;
 
-                anim.SetBool("isSkillAttack", isSkillAttack);
+                anim.SetBool("isSkillAttack", state.StateEnum.Equals(StateEnum.SkillAttack));
 
                 if (littleBone_Head_Clone == null)
                 {
@@ -221,7 +225,7 @@ public class LittleBone_Attack : PlayerAttack
                 StopCoroutine("activeFalseHeadCoroutine");
                 StartCoroutine("activeFalseHeadCoroutine");
             }
-            else if (_skillnumber.Equals(1) && skillBCollTimer <= 0f)
+            else if (_skillnumber.Equals(1) && skillBCoolTimer <= 0f)
             {
                 if (littleBone_Head_Clone == null)
                 {
@@ -230,8 +234,6 @@ public class LittleBone_Attack : PlayerAttack
 
                 if (littleBone_Head_Clone.gameObject.activeSelf && throwingHead)
                 {
-                    isSkillAttack = true;
-
                     moveDir.MoveDir = Vector2.zero;
                     rigid.velocity = Vector2.zero;
                     gravity.enabled = false;
@@ -241,8 +243,8 @@ public class LittleBone_Attack : PlayerAttack
                     anim.SetLayerWeight(0, 1.0f);
                     anim.SetLayerWeight(1, 0f);
 
-                    skillBCollTimer = skillBCollTime;
-                    skillACollTimer = 0f;
+                    skillBCoolTimer = skillBCoolTime;
+                    skillACoolTimer = 0f;
                     rigid.velocity = Vector2.zero;
                     transform.position = littleBone_Head_Clone.transform.position;
                     littleBone_Head_Clone.gameObject.SetActive(false);
@@ -257,8 +259,6 @@ public class LittleBone_Attack : PlayerAttack
     public override void ComboAttack()
     {
         moveDir.enabled = true;
-        isAttack = false;
-        anim.SetBool("isAttack", isAttack);
         anim.SetInteger("AttackCount", attackCount);
         anim.SetBool("isComboAttack", isComboAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
@@ -267,10 +267,8 @@ public class LittleBone_Attack : PlayerAttack
     public override void EndAttack()
     {
         moveDir.enabled = true;
-        isAttack = false;
         attackCount = 0;
         isComboAttack = false;
-        anim.SetBool("isAttack", isAttack);
         anim.SetInteger("AttackCount", attackCount);
         anim.SetBool("isComboAttack", isComboAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
@@ -278,9 +276,8 @@ public class LittleBone_Attack : PlayerAttack
 
     public override void EndSkillAttack()
     {
-        isSkillAttack = false;
-        anim.SetBool("isSkillAttack", isSkillAttack);
         state.SetStateEnum(gravity.IsGround == true ? StateEnum.Idle : StateEnum.Jump, gravity.IsGround);
+        anim.SetBool("isSkillAttack", false);
     }
 
     public override IEnumerator SwitchAttackCoroutine()

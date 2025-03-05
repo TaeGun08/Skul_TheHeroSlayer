@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3371938225914636623}
   - component: {fileID: 1605256276260172607}
   - component: {fileID: 6734184266619157366}
+  - component: {fileID: 4869136113649842032}
   m_Layer: 7
   m_Name: HiddenDagger
   m_TagString: Untagged
@@ -158,3 +159,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.7368421, y: 0.7368421}
   m_EdgeRadius: 0
+--- !u!114 &4869136113649842032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437680351651884488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f0109786f07214dbaf39354e2c90af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 2
+  itemTier: 2
+  itmeIcon: {fileID: 21300000, guid: 6abbd28619427bf4d8728bb20d7bfd81, type: 3}
+  itmeImage: {fileID: 21300000, guid: 1c7848998db17db47866c28172f0f889, type: 3}
+  projectile: {fileID: 2926919420858217069, guid: 1414b9c12744b754e8cf26288a85112e, type: 3}

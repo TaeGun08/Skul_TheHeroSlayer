@@ -12,8 +12,12 @@ GameObject:
   - component: {fileID: 5727870929984720799}
   - component: {fileID: 1248340579513441870}
   - component: {fileID: 297643822757342230}
+  - component: {fileID: 8171097248635018850}
+  - component: {fileID: -449396814364443310}
+  - component: {fileID: -8038506046782301732}
+  - component: {fileID: -6823900848238024529}
   m_Layer: 0
-  m_Name: Thief_Shuriken
+  m_Name: Shuriken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 2a08ceda3e5ddc34ca348b79d0cbf654, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -148,3 +152,61 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.32894737
+--- !u!114 &8171097248635018850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303620085597174536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a13fe1bc0907e469d2e616c3b3ba44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveDir: {x: 4, y: 0}
+  moveOff: 0
+--- !u!114 &-449396814364443310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303620085597174536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a50adda718c524d8069c5849571713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 30
+--- !u!114 &-8038506046782301732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303620085597174536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7f26d2517ef17e4e9a28397278fec0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 1
+  falseOrDetroy: 0
+--- !u!114 &-6823900848238024529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303620085597174536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e5b28e11b1d56345b9fad8e94a434e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0.4
+  playerOrMonsterHit: 1
+  disposable: 0
+  poolOn: 1
+  vfx: {fileID: 1288453330592549613, guid: 2681096b662150043a538f52c3193b91, type: 3}

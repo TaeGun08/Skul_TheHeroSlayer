@@ -317,13 +317,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598bf780adf053b4ea6cc7cb0bc40323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 8
   maxAttackCount: 2
-  skillACollTime: 8
-  skillBCollTime: 3
+  skillACoolTime: 7
+  skillBCoolTime: 3
   hasSkillCount: 2
+  hasSkillNumber: 0000000000000000
   vfx:
   - {fileID: 1288453330592549613, guid: 2681096b662150043a538f52c3193b91, type: 3}
-  damage: 8
   littleBone_Head: {fileID: 4847373583819177060, guid: d1bbca8a148df544a9da13668ae4fdaa, type: 3}
   hitBox: {fileID: 8084461689734032877}
 --- !u!114 &7774196378207260470
@@ -348,7 +349,6 @@ MonoBehaviour:
   dashCoolTime: 1
   dashCount: 2
   gravityDash: 0
-  formChange: 0
 --- !u!114 &-4963903183160400418
 MonoBehaviour:
   m_ObjectHideFlags: 0

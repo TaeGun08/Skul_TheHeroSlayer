@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class PlayerAttack : MonoBehaviour
 {
     protected KeyManager keyManager;
+    protected InventoryManager inventoryManager;
 
     protected PlayerStatus playerStatus;
 
@@ -16,28 +17,21 @@ public abstract class PlayerAttack : MonoBehaviour
     protected BoxCollider2D boxColl;
 
     [Header("공격설정")]
+    [SerializeField] protected int damage;
+    public int Damage { get { return damage; } }
     [SerializeField] protected int maxAttackCount;
-    [SerializeField] protected float skillACollTime;
-    public float SkillACollTime { get { return skillACollTime; } set { skillACollTime = value; } }
-    [SerializeField] protected float skillBCollTime;
-    public float SkillBCollTime { get { return skillBCollTime; } set { skillBCollTime = value; } }
+    [SerializeField] protected float skillACoolTime;
+    public float SkillACoolTime { get { return skillACoolTime; } set { skillACoolTime = value; } }
+    [SerializeField] protected float skillBCoolTime;
+    public float SkillBCoolTime { get { return skillBCoolTime; } set { skillBCoolTime = value; } }
 
-    protected float skillACollTimer;
-    public float SkillACollTimer { get { return skillACollTimer; } set { skillACollTimer = value; } }
-    protected float skillBCollTimer;
-    public float SkillBCollTimer { get { return skillBCollTimer; } set { skillBCollTimer = value; } }
+    protected float skillACoolTimer;
+    public float SkillACoolTimer { get { return skillACoolTimer; } set { skillACoolTimer = value; } }
+    protected float skillBCoolTimer;
+    public float SkillBCoolTimer { get { return skillBCoolTimer; } set { skillBCoolTimer = value; } }
 
     protected int attackCount;
     public int AttackCount { get { return attackCount; } set { attackCount = value; } }
-
-    protected bool isAttack;
-    public bool IsAttack { get { return isAttack; } set { isAttack = value; } }
-
-    protected bool isSkillAttack;
-    public bool IsSkillAttack { get { return isSkillAttack; } set { isSkillAttack = value; } }
-
-    protected bool isJumpAttack;
-    public bool IsJumpAttack { get { return isJumpAttack; } set { isJumpAttack = value; } }
 
     protected bool isComboAttack;
 
@@ -70,16 +64,19 @@ public abstract class PlayerAttack : MonoBehaviour
             keyManager = _keyManager as KeyManager;
         }
 
+        if (GameManager.Instance.ManagersDictionary.TryGetValue("InventoryManager", out object _inventoryManager))
+        {
+            inventoryManager = _inventoryManager as InventoryManager;
+        }
+
         GetComponentInParent<PlayerStatus>().TryGetComponent(out playerStatus);
     }
 
     protected abstract IEnumerator AttackMoveCoroutine();
 
-    public abstract void ResetAttack(int _info);
+    public abstract void ResetAttack();
 
-    public abstract void Attack(int _info);
-
-    public abstract void ResetSkillAttack();
+    public abstract void Attack();
 
     public abstract void SkillAttack(int _skillNumber);
 

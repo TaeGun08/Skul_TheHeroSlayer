@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
+    private GameManager gameManager;
+
+    private PlayerStatus playerStatus;
+
     private Rigidbody2D rigid;
     private State state;
     private Animator anim;
@@ -20,6 +24,12 @@ public class PlayerAnimation : MonoBehaviour
         TryGetComponent(out gravity);
     }
 
+    private void Start()
+    {
+        gameManager = GameManager.Instance;
+        gameManager.SkulData.GetComponent<PlayerStatus>().TryGetComponent(out playerStatus);
+    }
+
     private void moveAnim()
     {
         anim.SetFloat("StateIndex", state.StateEnum == StateEnum.Walk ? 1 : 0);
@@ -27,7 +37,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void fallAnim()
     {
-        if (state.StateEnum.Equals(StateEnum.SwitchAttack))
+        if (state.StateEnum.Equals(StateEnum.SwitchAttack) || state.StateEnum.Equals(StateEnum.JumpAttack))
         {
             return;
         }
@@ -61,11 +71,20 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetBool("isDash", state.StateEnum == StateEnum.Dash ? true : false);
     }
 
+    private void attackSpeedAnim()
+    {
+        if (playerStatus != null)
+        {
+            anim.SetFloat("AttackSpeed", playerStatus.PlayingGameStatus.attackSpeed / 100f);
+        }
+    }
+
     public void PlayerAnim()
     {
         moveAnim();
         fallAnim();
         jumpAnim();
         dashAnim();
+        attackSpeedAnim();
     }
 }

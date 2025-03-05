@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     private KeyManager keyManager;
+    private InventoryManager inventoryManager;
 
     private SkulData skulData;
 
@@ -25,6 +26,9 @@ public class PlayerInput : MonoBehaviour
     private float dashCoolTimer;
     private float dashTime;
 
+    private float destroyHeadTimer;
+    private float destroyItemTimer;
+
     private void Awake()
     {
         TryGetComponent(out state);
@@ -42,6 +46,11 @@ public class PlayerInput : MonoBehaviour
         if (GameManager.Instance.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
         {
             keyManager = _keyManager as KeyManager;
+        }
+
+        if (GameManager.Instance.ManagersDictionary.TryGetValue("InventoryManager", out object _inventoryManager))
+        {
+            inventoryManager = _inventoryManager as InventoryManager;
         }
 
         GetComponentInParent<SkulData>().TryGetComponent(out skulData);
@@ -155,7 +164,7 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[7]) 
             && _maxJumpCount > jumpCount
-            && !playerAttack.IsJumpAttack)
+            && !state.StateEnum.Equals(StateEnum.JumpAttack))
         {
             if (jumpCount > 0)
             {
@@ -166,7 +175,6 @@ public class PlayerInput : MonoBehaviour
             state.SetStateEnum(StateEnum.Jump, gravity.IsGround);
             gravity.IsGround = false;
             gravity.enabled = false;
-            playerAttack.IsAttack = false;
             anim.FallTime = 0f;
             gravity.Velocity = 0f;
             rigid.velocity = new Vector2(rigid.velocity.x, _jumpForce);
@@ -213,11 +221,11 @@ public class PlayerInput : MonoBehaviour
             playerEffect.Dash[dashCount].gameObject.SetActive(true);
             dashTime = _dashTime;
             playerAttack.EndAttack();
-            playerAttack.IsAttack = false;
             gravity.Velocity = 0f;
             anim.FallTime = 0f;
             dashCoolTimer = 0f;
             state.SetStateEnum(StateEnum.Dash, gravity.IsGround);
+            inventoryManager.UseItemAbility(StateEnum.Dash);
             moveDirection.enabled = false;
             isDash = true;
             rigid.velocity = Vector2.zero;
@@ -266,16 +274,14 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void InputAttack(ref int _formChange)
+    public void InputAttack()
     {
         if (playerAttack == null)
         {
             return;
         }
 
-        playerAttack.ResetAttack(_formChange);
-
-        playerAttack.ResetSkillAttack();
+        playerAttack.ResetAttack();
 
         if (keyManager == null || state.StateEnum.Equals(StateEnum.SwitchAttack)
             || state.StateEnum.Equals(StateEnum.Dash))
@@ -287,11 +293,6 @@ public class PlayerInput : MonoBehaviour
         {
             attack();
 
-            if (rigid.velocity.y <= 0 && !gravity.IsGround)
-            {
-                playerAttack.IsJumpAttack = true;
-            }
-
             if (gravity.IsGround)
             {
                 rigid.velocity = Vector2.zero;
@@ -299,7 +300,7 @@ public class PlayerInput : MonoBehaviour
                 moveDirection.enabled = false;
             }
 
-            playerAttack.Attack(_formChange);
+            playerAttack.Attack();
         }
 
         if (Input.GetKeyDown(keyManager.Key.KeyCodes[9]))
@@ -322,15 +323,37 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[5]))
-        {
-            Collider2D collider = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
-                LayerMask.GetMask("ChangeHead"));
+        Collider2D collider = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
+          LayerMask.GetMask("ChangeHead"));
 
+        if (collider == null)
+        {
+            if (destroyHeadTimer > 0)
+            {
+                destroyHeadTimer = 0f;
+            }
+            return;
+        }
+
+        if (Input.GetKey(keyManager.Key.KeyCodes[5]))
+        {
+            if (collider != null)
+            {
+                destroyHeadTimer += Time.deltaTime;
+                if (destroyHeadTimer >= 2)
+                {
+                    Destroy(collider.gameObject);
+                    destroyHeadTimer = 0f;
+                }
+            }
+        }
+        else if (Input.GetKeyUp(keyManager.Key.KeyCodes[5]))
+        {
             if (collider != null)
             {
                 skulData.GetHead(transform, collider.GetComponent<ChangeHead>());
             }
+            destroyHeadTimer = 0f;
         }
     }
 
@@ -359,15 +382,41 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(keyManager.Key.KeyCodes[5]))
-        {
-            Collider2D collider = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
-                LayerMask.GetMask("Item"));
+        Collider2D collider = Physics2D.OverlapBox(boxColl.bounds.center, boxColl.bounds.size, 0.0f,
+           LayerMask.GetMask("Item"));
 
+        if (collider == null)
+        {
+            if (destroyItemTimer > 0)
+            {
+                destroyItemTimer = 0f;
+            }
+            return;
+        }
+
+        if (Input.GetKey(keyManager.Key.KeyCodes[5]))
+        {
             if (collider != null)
             {
-
+                destroyItemTimer += Time.deltaTime;
+                if (destroyItemTimer >= 2)
+                {
+                    Destroy(collider.gameObject);
+                    destroyItemTimer = 0f;
+                }
             }
+        }
+        else if (Input.GetKeyUp(keyManager.Key.KeyCodes[5]))
+        {
+            if (collider != null)
+            {
+                Item item = collider.GetComponent<Item>();
+                inventoryManager.SetItem(item);
+                item.transform.SetParent(inventoryManager.transform);
+                item.Hide();
+            }
+
+            destroyItemTimer = 0f;
         }
     }
 }

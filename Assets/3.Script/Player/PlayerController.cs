@@ -31,8 +31,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashCoolTime;
     [SerializeField] private int dashCount;
     [SerializeField] private bool gravityDash;
-    [Space]
-    [SerializeField] private int formChange;
 
     private void Awake()
     {
@@ -62,9 +60,10 @@ public class PlayerController : MonoBehaviour
         input.InputJump(jumpForce, jumpCount);
         input.InputDash(dashForce, dashCoolTime, dashCount, gravityDash, dashTime, dashUpForce);
         input.InputFootholdFall();
-        input.InputAttack(ref formChange);
+        input.InputAttack();
         input.InputChangeHead();
         input.InputSwitchSkul();
+        input.InputGetItem();
         anim.PlayerAnim();
     }
 
