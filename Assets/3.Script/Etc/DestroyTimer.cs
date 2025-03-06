@@ -9,6 +9,11 @@ public class DestroyTimer : MonoBehaviour
     private float timer;
     [SerializeField] private bool falseOrDetroy;
 
+    private void OnDisable()
+    {
+        timer = time;
+    }
+
     private void Start()
     {
         timer = time;

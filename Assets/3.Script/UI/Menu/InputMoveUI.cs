@@ -42,12 +42,16 @@ public abstract class InputMoveUI : MonoBehaviour
     protected  virtual void Start()
     {
         gameManager = GameManager.Instance;
-        if (gameManager.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager))
+
+        buttonsEvent();
+    }
+
+    protected virtual void Update()
+    {
+        if (gameManager.ManagersDictionary.TryGetValue("KeyManager", out object _keyManager) && keyManager == null)
         {
             keyManager = _keyManager as KeyManager;
         }
-
-        buttonsEvent();
     }
 
     protected abstract void buttonsEvent();

@@ -4,20 +4,28 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
+    private BoxCollider2D boxColl;
+
     [SerializeField] private bool ground;
     public bool Ground => ground;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Awake()
     {
-        if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+        TryGetComponent(out boxColl);
+    }
+
+    private void LateUpdate()
+    {
+        groundCheck();
+    }
+
+    private void groundCheck()
+    {
+        if (Physics2D.BoxCast(boxColl.bounds.center, boxColl.bounds.size, 0.0f, Vector2.zero, 0.0f, LayerMask.GetMask("Ground")))
         {
             ground = true;
         }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+        else
         {
             ground = false;
         }

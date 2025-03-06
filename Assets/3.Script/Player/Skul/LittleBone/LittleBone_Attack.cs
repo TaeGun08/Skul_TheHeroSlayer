@@ -54,10 +54,23 @@ public class LittleBone_Attack : PlayerAttack
             if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")))
             {
                 Monster monsterSc = collider.GetComponent<Monster>();
-                monsterSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 0f));
-                Vector2 scale = transform.localScale;
-                scale.x *= -1f;
-                Instantiate(vfx[0], monsterSc.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
+                Boss bossSc = collider.GetComponent<Boss>();
+
+                if (monsterSc != null)
+                {
+                    monsterSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 0f));
+                    Vector2 scale = transform.localScale;
+                    scale.x *= -1f;
+                    Instantiate(vfx[0], monsterSc.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
+                }
+                
+                if (bossSc != null)
+                {
+                    bossSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100));
+                    Vector2 scale = transform.localScale;
+                    scale.x *= -1f;
+                    Instantiate(vfx[0], bossSc.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
+                }
             }
         }
     }
@@ -122,7 +135,9 @@ public class LittleBone_Attack : PlayerAttack
 
     public override void Attack()
     {
-        if (!state.StateEnum.Equals(StateEnum.Attack) && !state.StateEnum.Equals(StateEnum.JumpAttack))
+        if (!state.StateEnum.Equals(StateEnum.Attack) 
+            && !state.StateEnum.Equals(StateEnum.JumpAttack)
+            && !state.StateEnum.Equals(StateEnum.SkillAttack))
         {
             rigid.velocity = new Vector2(0f, rigid.velocity.y);
 
@@ -188,6 +203,7 @@ public class LittleBone_Attack : PlayerAttack
         {
             if (_skillnumber.Equals(0) && skillACoolTimer <= 0f)
             {
+                EndAttack();
                 moveDir.MoveDir = Vector2.zero;
                 rigid.velocity = Vector2.zero;
                 gravity.enabled = false;
@@ -234,6 +250,7 @@ public class LittleBone_Attack : PlayerAttack
 
                 if (littleBone_Head_Clone.gameObject.activeSelf && throwingHead)
                 {
+                    EndAttack();
                     moveDir.MoveDir = Vector2.zero;
                     rigid.velocity = Vector2.zero;
                     gravity.enabled = false;

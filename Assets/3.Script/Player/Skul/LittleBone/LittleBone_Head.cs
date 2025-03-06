@@ -89,10 +89,16 @@ public class LittleBone_Head : MonoBehaviour
                 && !moveDir.MoveOff)
             {
                 Monster monster = coll.GetComponent<Monster>();
+                Boss bossSc = coll.GetComponent<Boss>();
+
                 if (monster != null)
                 {
                     monster.Hit(damage, new Vector2(transform.localScale.x, 1f));
+                }
 
+                if (bossSc != null)
+                {
+                    bossSc.Hit(damage);
                 }
 
                 moveStop();
