@@ -83,25 +83,20 @@ public class LittleBone_Head : MonoBehaviour
 
         foreach (Collider2D coll in collider)
         {
-            if((coll.gameObject.layer.Equals(LayerMask.NameToLayer("Monster"))
-                || coll.gameObject.layer.Equals(LayerMask.NameToLayer("Ground"))
-                || coll.gameObject.layer.Equals(LayerMask.NameToLayer("Wall"))) 
-                && !moveDir.MoveOff)
+            if (!moveDir.MoveOff)
             {
-                Monster monster = coll.GetComponent<Monster>();
-                Boss bossSc = coll.GetComponent<Boss>();
-
-                if (monster != null)
+                if (coll.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")))
                 {
-                    monster.Hit(damage, new Vector2(transform.localScale.x, 1f));
+                    coll.TryGetComponent(out Hit _hit);
+                    _hit.Hit(damage, Vector2.zero);
+                    moveStop();
                 }
 
-                if (bossSc != null)
+                if ((coll.gameObject.layer.Equals(LayerMask.NameToLayer("Ground"))
+                     || coll.gameObject.layer.Equals(LayerMask.NameToLayer("Wall"))))
                 {
-                    bossSc.Hit(damage);
+                    moveStop();
                 }
-
-                moveStop();
             }
         }
     }

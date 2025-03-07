@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Monster : MonoBehaviour
+public abstract class Monster : MonoBehaviour, Hit
 {
     protected Animator anim;
     protected SpriteRenderer spriteRen;

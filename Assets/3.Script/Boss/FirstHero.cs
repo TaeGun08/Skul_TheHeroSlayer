@@ -4,7 +4,37 @@ using UnityEngine;
 
 public class FirstHero : Boss
 {
-    public override void Hit(int _damage)
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = GameManager.Instance;
+
+        StartCoroutine("appearance");
+    }
+
+    private void Update()
+    {
+        if (state.Equals(BossPatternState.Inactive))
+        {
+            int ranPattern = Random.Range(0, hasPattern);
+            state = BossPatternState.Active;
+            bossPattern();
+        }
+    }
+
+    protected override void bossPattern()
+    {
+
+    }
+
+    private IEnumerator appearance()
+    {
+        yield return new WaitForSeconds(2f);
+        anim.SetFloat("Appearance", 1);
+    }
+
+    public override void Hit(int _damage, Vector2 _knockback)
     {
         hp -= _damage;
 
@@ -21,10 +51,5 @@ public class FirstHero : Boss
                 Debug.Log("�׾");
             }
         }
-    }
-
-    protected override void bossPattern()
-    {
-        throw new System.NotImplementedException();
     }
 }

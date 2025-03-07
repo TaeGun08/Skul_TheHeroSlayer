@@ -8,9 +8,9 @@ public enum BossPatternState
     Active,
 }
 
-public abstract class Boss : MonoBehaviour
+public abstract class Boss : MonoBehaviour, Hit
 {
-    protected Animation anim;
+    protected Animator anim;
 
     [Header("º¸½º")]
     [SerializeField] protected int hp;
@@ -25,5 +25,5 @@ public abstract class Boss : MonoBehaviour
 
     protected abstract void bossPattern();
 
-    public abstract void Hit(int _damage);
+    public abstract void Hit(int _damage, Vector2 _knockback);
 }

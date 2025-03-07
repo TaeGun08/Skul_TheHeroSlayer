@@ -51,26 +51,12 @@ public class LittleBone_Attack : PlayerAttack
     {
         foreach (Collider2D collider in colliders)
         {
-            if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")))
+            if (collider.TryGetComponent(out Hit _hit))
             {
-                Monster monsterSc = collider.GetComponent<Monster>();
-                Boss bossSc = collider.GetComponent<Boss>();
-
-                if (monsterSc != null)
-                {
-                    monsterSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 0f));
-                    Vector2 scale = transform.localScale;
-                    scale.x *= -1f;
-                    Instantiate(vfx[0], monsterSc.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
-                }
-                
-                if (bossSc != null)
-                {
-                    bossSc.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100));
-                    Vector2 scale = transform.localScale;
-                    scale.x *= -1f;
-                    Instantiate(vfx[0], bossSc.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
-                }
+                _hit.Hit(damage * (playerStatus.PlayingGameStatus.physicalAttackPower / 100), new Vector2(transform.localScale.x, 0f));
+                Vector2 scale = transform.localScale;
+                scale.x *= -1f;
+                Instantiate(vfx[0], collider.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = scale;
             }
         }
     }
@@ -113,12 +99,12 @@ public class LittleBone_Attack : PlayerAttack
     {
         inventoryManager.UseItemAbility(StateEnum.Attack);
 
-        Collider2D[] monsters = Physics2D.OverlapBoxAll(hitBox.bounds.center, hitBox.bounds.size, 0.0f,
+        Collider2D[] hit = Physics2D.OverlapBoxAll(hitBox.bounds.center, hitBox.bounds.size, 0.0f,
             LayerMask.GetMask("Monster"));
 
-        if (!monsters.Length.Equals(0))
+        if (!hit.Length.Equals(0))
         {
-            onCollisions(monsters);
+            onCollisions(hit);
         }
     }
 

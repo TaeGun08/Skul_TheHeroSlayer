@@ -30,7 +30,9 @@ public class GameManager : MonoBehaviour
             Time.timeScale = isGamePause == true ? 0 : 1;
         }
     }
-    private bool isGameOver;
+
+    private bool isControllOff;
+    public bool IsControllOff { get { return isControllOff; } set { isControllOff = value; } }
 
     private void Awake()
     {
