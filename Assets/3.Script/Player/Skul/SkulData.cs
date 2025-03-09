@@ -48,16 +48,57 @@ public class SkulData : MonoBehaviour
         {
             skul = JsonConvert.DeserializeObject<Skul>(PlayerPrefs.GetString("SaveSkul"));
 
+            SkulChangeUI skulChangeUIA;
+            SkulChangeUI skulChangeUIB;
+
             if (skul.SkulIndexB.Equals(0))
             {
                 hasSkul[0] = Instantiate(skuls[skul.SkulIndexA - 1], transform);
+                hasSkul[0].GetComponent<SkulChangeUI>().TryGetComponent(out skulChangeUIA);
+                playerUI.PlayerStateUI.Icon[0].sprite = skulChangeUIA.Icon;
+
+                PlayerAttack playerAttackScA = hasSkul[0].GetComponent<PlayerAttack>();
+                playerAttackScA.HasSkillNumber[0] = skul.SkillNumberA[0];
+                playerAttackScA.HasSkillNumber[1] = skul.SkillNumberA[1];
+
+                playerUI.PlayerStateUI.Icon[1].gameObject.SetActive(false);
             }
             else
             {
                 hasSkul[0] = Instantiate(skuls[skul.SkulIndexA - 1], transform);
                 hasSkul[1] = Instantiate(skuls[skul.SkulIndexB - 1], transform);
                 hasSkul[1].SetActive(false);
+
+                hasSkul[0].GetComponent<SkulChangeUI>().TryGetComponent(out skulChangeUIA);
+                hasSkul[1].GetComponent<SkulChangeUI>().TryGetComponent(out skulChangeUIB);
+                playerUI.PlayerStateUI.Icon[0].sprite = skulChangeUIA.Icon;
+                playerUI.PlayerStateUI.Icon[1].sprite = skulChangeUIB.Icon;
+
+                PlayerAttack playerAttackScA = hasSkul[0].GetComponent<PlayerAttack>();
+                playerAttackScA.HasSkillNumber[0] = skul.SkillNumberA[0];
+                playerAttackScA.HasSkillNumber[1] = skul.SkillNumberA[1];
+
+                PlayerAttack playerAttackScB = hasSkul[1].GetComponent<PlayerAttack>();
+                playerAttackScB.HasSkillNumber[0] = skul.SkillNumberB[0];
+                playerAttackScB.HasSkillNumber[1] = skul.SkillNumberB[1];
+
+                playerUI.PlayerStateUI.Icon[1].gameObject.SetActive(true);
             }
+
+            if (!skul.SkillNumberA[0].Equals(0))
+            {
+                playerUI.PlayerStateUI.Skill_Icon[0].sprite = skulChangeUIA.Skill_Icon[skul.SkillNumberA[0] - 1];
+                if (!skul.SkillNumberA[1].Equals(0))
+                {
+                    playerUI.PlayerStateUI.Skill_Icon[1].sprite = skulChangeUIA.Skill_Icon[skul.SkillNumberA[1] - 1];
+                    playerUI.PlayerStateUI.Skill_Icon[1].gameObject.SetActive(true);
+                }
+                else
+                {
+                    playerUI.PlayerStateUI.Skill_Icon[1].gameObject.SetActive(false);
+                }
+            }
+
             playerEffect.SpriteRen = null;
             gameManager.OnSkul = hasSkul[0];
         }
@@ -107,8 +148,8 @@ public class SkulData : MonoBehaviour
 
     public void GetHead(Transform _trs, ChangeHead _changeHead)
     {
-        SkulChangeUI skulChangeUIA = null;
-        SkulChangeUI skulChangeUIB = null;
+        SkulChangeUI skulChangeUIA;
+        SkulChangeUI skulChangeUIB;
 
         if (hasSkul[1] == null)
         {
@@ -264,5 +305,11 @@ public class SkulData : MonoBehaviour
             StartCoroutine("activeFalseSkillBTimer");
             StartCoroutine(switchTimer());
         }
+    }
+
+    public void SetSaveSkulData()
+    {
+        string setSaveSkul = JsonConvert.SerializeObject(skul);
+        PlayerPrefs.SetString("SaveSkul", setSaveSkul);
     }
 }

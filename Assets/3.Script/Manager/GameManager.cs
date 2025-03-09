@@ -17,9 +17,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject onSkul;
     public GameObject OnSkul { get { return onSkul; } set { onSkul = value; } }
 
-    [Header("Äµ¹ö½º")]
-    [SerializeField] private GameObject canvas;
-
     private bool isGamePause;
     public bool IsGamePause
     {
@@ -47,13 +44,13 @@ public class GameManager : MonoBehaviour
         }
 
         Application.targetFrameRate = 60;
-
-        Instantiate(canvas, transform);
     }
 
     public void NewGame()
     {
         Destroy(skulData.gameObject);
+        PlayerPrefs.DeleteKey("SaveItem");
+        PlayerPrefs.DeleteKey("SaveScene");
         PlayerPrefs.DeleteKey("SaveSkul");
     }
 }

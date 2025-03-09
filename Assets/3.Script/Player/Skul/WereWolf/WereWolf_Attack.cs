@@ -40,7 +40,6 @@ public class WereWolf_Attack : PlayerAttack
     private void useWereWolfSkill(int _skillNumber)
     {
         anim.SetFloat("SkillCount", hasSkillNumber[_skillNumber]);
-        useSkillNumber = hasSkillNumber[_skillNumber];
 
         moveDir.MoveDir = Vector2.zero;
         rigid.velocity = Vector2.zero;
@@ -58,22 +57,26 @@ public class WereWolf_Attack : PlayerAttack
                 skill01Count = 2;
                 skill01On = true;
                 skill01Timer = 10f;
+                useSkillNumber = 1;
                 break;
             case 2:
                 skillACoolTimer = 15f;
                 skillACoolTime = 15f;
                 damage = 15;
+                useSkillNumber = 2;
                 break;
             case 3:
                 skillACoolTimer = 20f;
                 skillACoolTime = 20f;
                 damage = 20;
+                useSkillNumber = 3;
                 break;
             case 4:
                 StopCoroutine("skill04Coroutine");
                 StartCoroutine("skill04Coroutine");
                 skillACoolTimer = 20f;
                 skillACoolTime = 20f;
+                useSkillNumber = 1;
                 break;
         }
     }
@@ -250,7 +253,10 @@ public class WereWolf_Attack : PlayerAttack
                 {
                     useWereWolfSkill(1);
                 }
-                huntingSkill(1);
+                else
+                {
+                    huntingSkill(1);
+                }
             }
         }
     }

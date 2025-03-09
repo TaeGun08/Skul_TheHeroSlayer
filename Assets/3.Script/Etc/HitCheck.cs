@@ -39,7 +39,8 @@ public class HitCheck : MonoBehaviour
         else if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Monster")) && playerOrMonsterHit)
         {
             playerAttack = gameManager.OnSkul.GetComponent<PlayerAttack>();
-            collision.GetComponent<Monster>().Hit((int)(playerAttack.Damage * damage), Vector2.zero);
+            collision.TryGetComponent(out Hit _hit);
+            _hit.Hit((int)(playerAttack.Damage * damage), Vector2.zero);
             Instantiate(vfx, collision.transform.position, Quaternion.identity).GetComponent<VFX>().Scale = -transform.localScale;
 
             if (poolOn)

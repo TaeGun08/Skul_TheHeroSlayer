@@ -81,21 +81,33 @@ public class Menu : InputMoveUI
         buttons[1].onClick.AddListener(() =>
         {
             opneUI[0].SetActive(true);
+            count = 0;
+            texts[0].color = changeColor;
+            choice();
         });
 
         buttons[2].onClick.AddListener(() =>
         {
             opneUI[1].SetActive(true);
+            count = 0;
+            texts[0].color = changeColor;
+            choice();
         });
 
         buttons[3].onClick.AddListener(() =>
         {
             opneUI[2].SetActive(true);
+            count = 0;
+            texts[0].color = changeColor;
+            choice();
         });
 
         buttons[4].onClick.AddListener(() =>
         {
             opneUI[3].SetActive(true);
+            count = 0;
+            texts[0].color = changeColor;
+            choice();
         });
     }
 }

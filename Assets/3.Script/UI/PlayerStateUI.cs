@@ -19,7 +19,7 @@ public class PlayerStateUI : MonoBehaviour
     [SerializeField] private Slider hpBar;
     [SerializeField] private Image switchTimerImage;
 
-    private void OnEnable()
+    private void Start()
     {
         GetComponentInParent<CanvasManager>().TryGetComponent(out canvasManager);
         canvasManager.UIDictionary.Add("PlayerState", this);

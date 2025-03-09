@@ -85,6 +85,11 @@ public class Setting : InputMoveUI
             return;
         }
 
+        if (keyManager == null)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             count = 0;

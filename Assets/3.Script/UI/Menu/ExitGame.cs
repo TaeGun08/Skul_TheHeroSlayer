@@ -8,6 +8,11 @@ public class ExitGame : InputMoveUI
 {
     private void LateUpdate()
     {
+        if (keyManager == null)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             gameObject.SetActive(false);

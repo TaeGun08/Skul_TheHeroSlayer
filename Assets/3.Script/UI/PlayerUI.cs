@@ -24,7 +24,7 @@ public class PlayerUI : MonoBehaviour
         TryGetComponent(out playerStatus);
     }
 
-    private void Start()
+    private void OnEnable()
     {
         gameManager = GameManager.Instance;
 

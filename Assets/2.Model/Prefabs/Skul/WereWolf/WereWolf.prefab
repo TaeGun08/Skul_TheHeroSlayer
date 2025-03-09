@@ -454,7 +454,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1133888628911145974
 BoxCollider2D:
@@ -578,7 +578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: 15
-  isGround: 0
+  isGround: 1
 --- !u!114 &3007410467266134637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,7 +630,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 9
   maxAttackCount: 2
-  attackSpeed: 1
   skillACoolTime: 15
   skillBCoolTime: 15
   hasSkillCount: 1

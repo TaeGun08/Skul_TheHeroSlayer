@@ -49,6 +49,10 @@ public class KeyManager : MonoBehaviour
         {
             GameManager.Instance.ManagersDictionary.Add("KeyManager", this);
         }
+        else
+        {
+            GameManager.Instance.ManagersDictionary["KeyManager"] = this;
+        }
     }
 
     /// <summary>

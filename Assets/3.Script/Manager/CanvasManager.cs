@@ -13,5 +13,9 @@ public class CanvasManager : MonoBehaviour
         {
             GameManager.Instance.ManagersDictionary.Add("CanvasManager", this);
         }
+        else
+        {
+            GameManager.Instance.ManagersDictionary["CanvasManager"] = this;
+        }
     }
 }

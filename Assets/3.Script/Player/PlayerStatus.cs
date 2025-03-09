@@ -40,10 +40,10 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            ResetStatusData();
-            RestartStatus();
             playerStatus.Add("Status", status);
             playerStatus.Add("PlayingGameStatus", playingGameStatus);
+            ResetStatusData();
+            RestartStatus();
             SetSaveStatus();
         }
     }
@@ -65,6 +65,8 @@ public class PlayerStatus : MonoBehaviour
         status.crit = 0;
         status.critDamage = 1.50f;
         status.rookieOn = false;
+
+        playerStatus["Status"] = status;
     }
 
     public void RestartStatus()
@@ -89,6 +91,7 @@ public class PlayerStatus : MonoBehaviour
         {
             playingGameStatus.receivedDamage = 0.5f;
         }
+        playerStatus["PlayingGameStatus"] = playingGameStatus;
     }
 
     public void SetSaveStatus()

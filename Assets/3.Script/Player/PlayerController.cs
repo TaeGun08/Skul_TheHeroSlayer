@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     private GameManager gameManager;
+    private Fade fade;
 
     private PlayerStatus playerStatus;
 
@@ -44,6 +45,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
+        fade = Fade.Instance;
 
         GetComponentInParent<PlayerStatus>().TryGetComponent(out playerStatus);
         TryGetComponent(out input);
@@ -104,8 +106,8 @@ public class PlayerController : MonoBehaviour
         if (playerStatus.PlayingGameStatus.curHp <= 0)
         {
             playerStatus.RestartStatus();
-            gameManager.NewGame();
-            SceneManager.LoadSceneAsync(1);
+            fade.SceneName = "Stage_0";
+            fade.FadeInOut(false, true);
         }
     }
 }

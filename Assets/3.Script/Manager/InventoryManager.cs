@@ -7,6 +7,8 @@ public class InventoryManager : MonoBehaviour
 {
     private int[] getItemIndex = new int[9];
     private Item[] itemAbility = new Item[9];
+    private int count;
+
     private ItemsManagement itemsManagement;
 
     private void Awake()
@@ -20,9 +22,17 @@ public class InventoryManager : MonoBehaviour
             {
                 if (!getItemIndex[i].Equals(0))
                 {
-                    Item item = Instantiate(itemsManagement.Items[i], transform);
-                    itemAbility[i] = item;
-                    item.Hide();
+                    for (int j = 0; j < itemsManagement.Items.Length; j++)
+                    {
+                        if (itemsManagement.Items[j].Index.Equals(getItemIndex[i]))
+                        {
+                            Item item = Instantiate(itemsManagement.Items[j], transform);
+                            itemAbility[count] = item;
+                            item.Hide();
+                            count++;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -38,6 +48,25 @@ public class InventoryManager : MonoBehaviour
         if (!GameManager.Instance.ManagersDictionary.ContainsKey("InventoryManager"))
         {
             GameManager.Instance.ManagersDictionary.Add("InventoryManager", this);
+        }
+        else
+        {
+            GameManager.Instance.ManagersDictionary["InventoryManager"] = this;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (string.IsNullOrEmpty(PlayerPrefs.GetString("SaveItem")) && !itemAbility.Length.Equals(0))
+        {
+            for (int i = 0; i < itemAbility.Length; i++)
+            {
+                if (itemAbility[i] != null)
+                {
+                    Destroy(itemAbility[i].gameObject);
+                }
+                getItemIndex[i] = 0;
+            }
         }
     }
 
@@ -77,5 +106,11 @@ public class InventoryManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public void SetSaveInventory()
+    {
+        string setSaveItem = JsonConvert.SerializeObject(getItemIndex);
+        PlayerPrefs.SetString("SaveItem", setSaveItem);
     }
 }

@@ -7,11 +7,24 @@ using UnityEngine.UI;
 
 public class NewGame : InputMoveUI
 {
+    private Fade fade;
+
     [Header("»õ °ÔÀÓ")]
     [SerializeField] private GameObject menu;
 
+    protected override void Start()
+    {
+        base.Start();
+        fade = Fade.Instance;
+    }
+
     private void LateUpdate()
     {
+        if (keyManager == null)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             gameObject.SetActive(false);
@@ -39,8 +52,8 @@ public class NewGame : InputMoveUI
             }
             else
             {
-                SceneManager.LoadSceneAsync(1);
-                gameManager.NewGame();
+                fade.SceneName = "Stage_0";
+                fade.FadeInOut(false, true);
                 count = 0;
                 gameObject.SetActive(false);
                 menu.SetActive(false);
@@ -60,8 +73,8 @@ public class NewGame : InputMoveUI
 
         buttons[1].onClick.AddListener(() =>
         {
-            SceneManager.LoadSceneAsync(1);
-            gameManager.NewGame();
+            fade.SceneName = "Stage_0";
+            fade.FadeInOut(false, true);
             count = 0;
             gameObject.SetActive(false);
             menu.SetActive(false);

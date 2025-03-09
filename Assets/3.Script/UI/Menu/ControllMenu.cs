@@ -31,6 +31,11 @@ public class ControllMenu : InputMoveUI
 
     private void LateUpdate()
     {
+        if (keyManager == null)
+        {
+            return;
+        }
+
         if (isChangeKey)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
