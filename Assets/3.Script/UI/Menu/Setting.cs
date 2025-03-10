@@ -391,7 +391,7 @@ public class Setting : InputMoveUI
     public void SetSetting()
     {
         Screen.SetResolution(settingData.width, settingData.height, settingData.fullScreen);
-        resolution.SetAspect();
+        resolution.SetAspect(settingData.width, settingData.height);
         string setSaveSetting = JsonConvert.SerializeObject(settingData);
         PlayerPrefs.SetString("SaveSetting", setSaveSetting);
     }
