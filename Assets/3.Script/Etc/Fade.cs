@@ -107,11 +107,13 @@ public class Fade : MonoBehaviour
         if (gameManager.SkulData != null)
         {
             gameManager.SkulData.SetSaveSkulData();
-            gameManager.SkulData.GetComponent<PlayerStatus>().SetSaveStatus();
+            PlayerStatus playerStatusSc =  gameManager.SkulData.GetComponent<PlayerStatus>();
             if (_newGame)
             {
+                playerStatusSc.RestartStatus();
                 gameManager.NewGame();
             }
+            playerStatusSc.SetSaveStatus();
             inventoryManager.SetSaveInventory();
         }
 
