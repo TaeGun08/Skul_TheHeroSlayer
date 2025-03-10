@@ -23,6 +23,8 @@ public class Setting : InputMoveUI
     private SettingData settingData = new SettingData();
     public SettingData SettingData { get { return settingData; } set { settingData = value; } }
 
+    private CanvasManager canvasManager; 
+
     [Header("¼³Á¤")]
     [SerializeField] private Button[] leftButtons;
     [SerializeField] private Button[] rightButtons;
