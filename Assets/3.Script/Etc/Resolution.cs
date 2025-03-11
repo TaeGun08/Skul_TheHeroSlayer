@@ -24,6 +24,8 @@ public class Resolution : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
+        Debug.Log(aspect);
+        Debug.Log((float)Screen.width / Screen.height);
     }
 
     private void LateUpdate()
@@ -42,6 +44,11 @@ public class Resolution : MonoBehaviour
         float curResolution = (float)_width / _height;
 
         Rect viewportRect = cam.rect;
+
+        viewportRect.height = 1f;
+        viewportRect.width = 1f;
+        viewportRect.y = 0f;
+        viewportRect.x = 0f;
 
         if (aspect > curResolution)
         {
