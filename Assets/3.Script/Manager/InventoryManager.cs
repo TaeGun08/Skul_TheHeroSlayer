@@ -113,4 +113,16 @@ public class InventoryManager : MonoBehaviour
         string setSaveItem = JsonConvert.SerializeObject(getItemIndex);
         PlayerPrefs.SetString("SaveItem", setSaveItem);
     }
+
+    public void ResetInven()
+    {
+        PlayerPrefs.DeleteKey("SaveItem");
+        for (int i = 0; i < itemAbility.Length; i++)
+        {
+            if (itemAbility[i] != null)
+            {
+                Destroy(itemAbility[i].gameObject);
+            }
+        }
+    }
 }

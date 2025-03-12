@@ -112,6 +112,7 @@ public class Fade : MonoBehaviour
             {
                 playerStatusSc.RestartStatus();
                 gameManager.NewGame();
+                inventoryManager.ResetInven();
             }
             playerStatusSc.SetSaveStatus();
             inventoryManager.SetSaveInventory();

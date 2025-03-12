@@ -3569,7 +3569,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 359594892605300892, guid: facda04c490213d4980a21ac5afeb432, type: 3}
       propertyPath: hp
-      value: 400
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 359594892605300892, guid: facda04c490213d4980a21ac5afeb432, type: 3}
       propertyPath: hpBar

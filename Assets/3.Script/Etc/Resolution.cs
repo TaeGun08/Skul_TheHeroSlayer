@@ -24,8 +24,6 @@ public class Resolution : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
-        Debug.Log(aspect);
-        Debug.Log((float)Screen.width / Screen.height);
     }
 
     private void LateUpdate()

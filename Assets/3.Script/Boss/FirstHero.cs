@@ -520,7 +520,7 @@ public class FirstHero : Boss
         {
             if (phase.Equals(0))
             {
-                hp = 600;
+                hp = 50;
                 maxHp = hp;
                 hpBar.color = Color.magenta;
                 hpBar.fillAmount = (float)hp / maxHp;
