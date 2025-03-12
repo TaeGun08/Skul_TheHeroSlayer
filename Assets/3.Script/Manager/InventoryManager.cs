@@ -124,5 +124,13 @@ public class InventoryManager : MonoBehaviour
                 Destroy(itemAbility[i].gameObject);
             }
         }
+
+        for (int i = 0; i < getItemIndex.Length; i++)
+        {
+            if (!getItemIndex[i].Equals(0))
+            {
+                getItemIndex[i] = 0;
+            }
+        }
     }
 }
